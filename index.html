@@ -426,6 +426,7 @@
         let advantage = 0;
         let freePoints = [0, 0];
 
+        loadFromStorage();
         render();
         updateServeUI();
 
@@ -579,6 +580,7 @@
                 document.getElementById('games-p2').textContent = games[1];
                 renderSets();
             }
+            saveToStorage();
         }
 
         function renderSets() {
@@ -613,6 +615,58 @@
         function showWinner(p) {
             document.getElementById('winner-name').textContent = `${getName(p)} gana el partido!`;
             document.getElementById('winner-overlay').classList.remove('d-none');
+        }
+
+        // ── Persistencia ──
+        function saveToStorage() {
+            const data = {
+                mode, setsToWin, gamesPerSet, serve, matchOver,
+                points, games, sets, setsWon, tiebreak, advantage,
+                freePoints,
+                names: [
+                    document.getElementById('name-p1').value,
+                    document.getElementById('name-p2').value
+                ],
+                historyHTML: document.getElementById('history-list').innerHTML
+            };
+            localStorage.setItem('padel-state', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const raw = localStorage.getItem('padel-state');
+            if (!raw) return;
+            try {
+                const d = JSON.parse(raw);
+                mode = d.mode || 'padel';
+                setsToWin = d.setsToWin || 2;
+                gamesPerSet = d.gamesPerSet || 6;
+                serve = d.serve || 1;
+                matchOver = d.matchOver || false;
+                points = d.points || [0, 0];
+                games = d.games || [0, 0];
+                sets = d.sets || [[], []];
+                setsWon = d.setsWon || [0, 0];
+                tiebreak = d.tiebreak || false;
+                advantage = d.advantage || 0;
+                freePoints = d.freePoints || [0, 0];
+                if (d.names) {
+                    document.getElementById('name-p1').value = d.names[0];
+                    document.getElementById('name-p2').value = d.names[1];
+                }
+                if (d.historyHTML) {
+                    document.getElementById('history-list').innerHTML = d.historyHTML;
+                }
+                // Restaurar UI de modo y config
+                document.getElementById('btn-padel').classList.toggle('active', mode === 'padel');
+                document.getElementById('btn-free').classList.toggle('active', mode === 'free');
+                document.getElementById('padel-config').classList.toggle('d-none', mode === 'free');
+                document.querySelectorAll('[id^="sets-"]').forEach(b => {
+                    if (b.id.startsWith('sets-p')) return;
+                    b.classList.toggle('active', b.id === 'sets-' + setsToWin);
+                });
+                document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
+                document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
+            } catch(e) {}
         }
 
         function confirmReset() {
