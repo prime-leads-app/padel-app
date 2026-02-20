@@ -557,7 +557,7 @@
             document.getElementById('btn-padel').classList.toggle('active', m === 'padel');
             document.getElementById('btn-free').classList.toggle('active', m === 'free');
             document.getElementById('padel-config').classList.toggle('d-none', m === 'free');
-            resetMatch();
+            render();
         }
 
         function setSetsToWin(n) {
