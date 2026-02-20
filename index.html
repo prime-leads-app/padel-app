@@ -574,6 +574,18 @@
         </div>
     </div>
 
+    <!-- Confirm Config Change Overlay -->
+    <div class="winner-overlay d-none" id="confirm-config-overlay">
+        <div class="winner-card" style="background: linear-gradient(135deg, #8e44ad, #2c3e50);">
+            <h4 class="mb-3">Cambiar configuracion?</h4>
+            <p class="mb-4" style="opacity:0.8;">El marcador actual se va a reiniciar.</p>
+            <div class="d-flex gap-3 justify-content-center">
+                <button class="btn btn-outline-light btn-lg" onclick="cancelConfigChange()">Cancelar</button>
+                <button class="btn btn-light btn-lg" onclick="applyConfigChange()">Cambiar</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         const PADEL_POINTS = ['0', '15', '30', '40'];
@@ -605,27 +617,55 @@
             render();
         }
 
+        function hasScore() {
+            return points[0] + points[1] + games[0] + games[1] + sets[0].length + freePoints[0] + freePoints[1] > 0;
+        }
+
+        let pendingConfigAction = null;
+
+        function confirmConfigChange(action) {
+            if (!hasScore()) { action(); return; }
+            pendingConfigAction = action;
+            document.getElementById('confirm-config-overlay').classList.remove('d-none');
+        }
+
+        function cancelConfigChange() {
+            document.getElementById('confirm-config-overlay').classList.add('d-none');
+            pendingConfigAction = null;
+        }
+
+        function applyConfigChange() {
+            document.getElementById('confirm-config-overlay').classList.add('d-none');
+            if (pendingConfigAction) { pendingConfigAction(); pendingConfigAction = null; }
+        }
+
         function setSetsToWin(n) {
-            setsToWin = n;
-            document.querySelectorAll('[id^="sets-"]').forEach(b => {
-                if (b.id.startsWith('sets-p')) return;
-                b.classList.toggle('active', b.id === 'sets-' + n);
+            confirmConfigChange(() => {
+                setsToWin = n;
+                document.querySelectorAll('[id^="sets-"]').forEach(b => {
+                    if (b.id.startsWith('sets-p')) return;
+                    b.classList.toggle('active', b.id === 'sets-' + n);
+                });
+                resetMatch();
             });
-            resetMatch();
         }
 
         function setGamesPerSet(n) {
-            gamesPerSet = n;
-            document.getElementById('gps-6').classList.toggle('active', n === 6);
-            document.getElementById('gps-4').classList.toggle('active', n === 4);
-            resetMatch();
+            confirmConfigChange(() => {
+                gamesPerSet = n;
+                document.getElementById('gps-6').classList.toggle('active', n === 6);
+                document.getElementById('gps-4').classList.toggle('active', n === 4);
+                resetMatch();
+            });
         }
 
         function setDeuceMode(m) {
-            deuceMode = m;
-            document.getElementById('deuce-golden').classList.toggle('active', m === 'golden');
-            document.getElementById('deuce-adv').classList.toggle('active', m === 'advantage');
-            resetMatch();
+            confirmConfigChange(() => {
+                deuceMode = m;
+                document.getElementById('deuce-golden').classList.toggle('active', m === 'golden');
+                document.getElementById('deuce-adv').classList.toggle('active', m === 'advantage');
+                resetMatch();
+            });
         }
 
         function toggleRules() {
@@ -1040,9 +1080,7 @@
         }
 
         function confirmReset() {
-            // Si no hay puntos anotados, reiniciar directo sin preguntar
-            const hasScore = points[0] + points[1] + games[0] + games[1] + sets[0].length + freePoints[0] + freePoints[1] > 0;
-            if (!hasScore) { resetMatch(); return; }
+            if (!hasScore()) { resetMatch(); return; }
             document.getElementById('confirm-overlay').classList.remove('d-none');
         }
 
