@@ -353,17 +353,46 @@
         </div>
 
         <!-- Rules -->
-        <div class="d-none" id="rules-card" style="background:#2c2c54; color:#fff; border-radius:10px; padding:10px; font-size:0.85rem; margin-top:6px;">
-            <strong style="font-size:1rem;">Reglas de puntuacion</strong>
-            <ul style="padding-left:18px; margin:8px 0;">
-                <li><b>Puntos:</b> 0, 15, 30, 40, Juego</li>
-                <li><b>40-40 Punto de Oro:</b> El siguiente punto gana el juego. Sin ventajas. Regla oficial WPT / Premier Padel.</li>
-                <li><b>40-40 Ventaja:</b> Necesitas 2 puntos seguidos para ganar (ventaja + juego). Sistema tradicional.</li>
-                <li><b>Set:</b> Gana el primero en llegar a 6 (o 4) juegos con 2 de diferencia.</li>
-                <li><b>Tie-break:</b> A 6-6 juegos se juega tie-break. Primero a 7 puntos con 2 de diferencia.</li>
-                <li><b>Partido:</b> Gana el que llegue al numero de sets configurado.</li>
-            </ul>
-            <button class="btn btn-outline-light btn-sm w-100" onclick="toggleRules()">Cerrar</button>
+        <div class="d-none" id="rules-card" style="background:#2c2c54; color:#fff; border-radius:10px; padding:12px; font-size:0.85rem; margin-top:6px; line-height:1.5;">
+            <strong style="font-size:1rem;">Como se cuenta en padel</strong>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">1. Puntos dentro de un juego</b><br>
+                Cada punto que anotas sube asi: <b>0 &rarr; 15 &rarr; 30 &rarr; 40</b><br>
+                Si tienes 40 y anotas otro punto, ganas el juego.<br>
+                <span style="opacity:0.7;">Ej: Vas 40-30, anotas punto = ganas el juego.</span>
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">2. Empate a 40 (Deuce / Iguales)</b><br>
+                Si los dos llegan a 40-40, depende del modo:<br>
+                <b>Punto de Oro:</b> Un solo punto decide. El que anote gana el juego. Asi se juega en torneos profesionales (WPT).<br>
+                <b>Ventaja:</b> Tienes que anotar 2 puntos seguidos. El primero te da "ventaja", el segundo te da el juego. Si el otro anota, regresan a iguales.<br>
+                <span style="opacity:0.7;">Ej con Oro: Van 40-40, tu anotas = ganas el juego.</span><br>
+                <span style="opacity:0.7;">Ej con Ventaja: Van 40-40, tu anotas = "ventaja". Anotas de nuevo = ganas. Pero si el otro anota = regresan a 40-40.</span>
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">3. Juegos dentro de un set</b><br>
+                Necesitas ganar <b>6 juegos</b> para ganar un set, pero con 2 de ventaja.<br>
+                <span style="opacity:0.7;">Ej: Si vas 6-4 en juegos, ganaste el set.</span><br>
+                <span style="opacity:0.7;">Ej: Si van 6-5, todavia no ganas. Necesitas 7-5.</span>
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">4. Tie-break (desempate)</b><br>
+                Si empatan a 6-6 juegos, se juega un tie-break. Aqui los puntos van 1, 2, 3... (no 15, 30, 40). Gana el primero en llegar a <b>7 puntos</b> con 2 de ventaja.<br>
+                <span style="opacity:0.7;">Ej: 7-5 en tie-break = ganas el set.</span><br>
+                <span style="opacity:0.7;">Ej: 7-6 no vale, siguen hasta que alguien saque 2 de ventaja (8-6, 9-7, etc).</span>
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">5. Partido completo</b><br>
+                Gana el que llegue al numero de sets configurado arriba (1, 2 o 3).<br>
+                <span style="opacity:0.7;">Ej: Con "Sets: 2", el primero en ganar 2 sets gana el partido (al mejor de 3).</span>
+            </div>
+
+            <button class="btn btn-outline-light btn-sm w-100" onclick="toggleRules()" style="margin-top:6px;">Cerrar</button>
         </div>
 
         <!-- Scoreboard -->
