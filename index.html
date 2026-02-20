@@ -58,9 +58,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
+            flex-wrap: nowrap;
+            gap: 4px;
             flex-shrink: 0;
+            font-size: 0.75rem;
         }
 
         /* ── Scoreboard: vertical on mobile ── */
@@ -333,19 +334,19 @@
             <div class="config-row">
                 <small class="text-muted">Sets:</small>
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-2" onclick="setSetsToWin(1)" id="sets-1">1</button>
-                    <button class="btn btn-outline-light py-0 px-2 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
-                    <button class="btn btn-outline-light py-0 px-2" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                    <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(1)" id="sets-1">1</button>
+                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
+                    <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(3)" id="sets-3">3</button>
                 </div>
                 <small class="text-muted">Games:</small>
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-2 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
-                    <button class="btn btn-outline-light py-0 px-2" onclick="setGamesPerSet(4)" id="gps-4">4</button>
+                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
+                    <button class="btn btn-outline-light py-0 px-1" onclick="setGamesPerSet(4)" id="gps-4">4</button>
                 </div>
                 <small class="text-muted">40-40:</small>
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-2 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
-                    <button class="btn btn-outline-light py-0 px-2" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
+                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
+                    <button class="btn btn-outline-light py-0 px-1" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
                 </div>
                 <button class="btn btn-outline-secondary btn-sm py-0 px-2" onclick="toggleRules()">?</button>
             </div>
