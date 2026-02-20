@@ -400,7 +400,7 @@
 
         <!-- Controls -->
         <div class="controls-bar">
-            <button class="btn btn-outline-warning btn-sm" onclick="undoPoint()">Deshacer</button>
+            <button class="btn btn-outline-warning btn-sm" onclick="confirmUndo()">Deshacer</button>
             <button class="btn btn-outline-info btn-sm" onclick="toggleServe()">Saque</button>
             <button class="btn btn-outline-danger btn-sm" onclick="confirmReset()">Reiniciar</button>
         </div>
@@ -413,6 +413,18 @@
             </div>
             <div class="card-body p-2 d-none" id="history-body" style="max-height: 120px; overflow-y: auto;">
                 <div id="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Undo Overlay -->
+    <div class="winner-overlay d-none" id="confirm-undo-overlay">
+        <div class="winner-card" style="background: linear-gradient(135deg, #e67e22, #2c3e50);">
+            <h4 class="mb-3">Deshacer ultimo punto?</h4>
+            <p class="mb-4" style="opacity:0.8;">Se va a quitar el ultimo punto anotado.</p>
+            <div class="d-flex gap-3 justify-content-center">
+                <button class="btn btn-outline-light btn-lg" onclick="cancelUndo()">Cancelar</button>
+                <button class="btn btn-warning btn-lg" onclick="cancelUndo(); undoPoint();">Deshacer</button>
             </div>
         </div>
     </div>
@@ -696,6 +708,15 @@
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
             } catch(e) {}
+        }
+
+        function confirmUndo() {
+            if (!history.length) return;
+            document.getElementById('confirm-undo-overlay').classList.remove('d-none');
+        }
+
+        function cancelUndo() {
+            document.getElementById('confirm-undo-overlay').classList.add('d-none');
         }
 
         function confirmReset() {
