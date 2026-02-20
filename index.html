@@ -188,6 +188,10 @@
             line-height: 1;
         }
 
+        .score-points.free-score {
+            font-size: 12rem;
+        }
+
 
         /* ── Separator ── */
         .vs-separator {
@@ -436,7 +440,7 @@
                                 <div class="score-games" id="games-p1">0</div>
                             </div>
                             <div class="score-block">
-                                <div class="score-label">PUNTOS</div>
+                                <div class="score-label" id="points-label-p1">PUNTOS</div>
                                 <div class="score-points" id="score-p1" style="color:#FFFFFF">0</div>
                             </div>
                         </div>
@@ -465,7 +469,7 @@
                                 <div class="score-games" id="games-p2">0</div>
                             </div>
                             <div class="score-block">
-                                <div class="score-label">PUNTOS</div>
+                                <div class="score-label" id="points-label-p2">PUNTOS</div>
                                 <div class="score-points" id="score-p2" style="color:#FFFFFF">0</div>
                             </div>
                         </div>
@@ -707,15 +711,25 @@
             if (mode === 'free') {
                 document.getElementById('score-p1').textContent = freePoints[0];
                 document.getElementById('score-p2').textContent = freePoints[1];
+                document.getElementById('score-p1').style.fontSize = '';
+                document.getElementById('score-p2').style.fontSize = '';
+                document.getElementById('score-p1').classList.add('free-score');
+                document.getElementById('score-p2').classList.add('free-score');
                 document.getElementById('games-p1').textContent = '';
                 document.getElementById('games-p2').textContent = '';
                 document.getElementById('sets-p1').innerHTML = '';
                 document.getElementById('sets-p2').innerHTML = '';
+                document.getElementById('points-label-p1').style.display = 'none';
+                document.getElementById('points-label-p2').style.display = 'none';
                 gb1.style.display = 'none';
                 gb2.style.display = 'none';
             } else {
                 gb1.style.display = '';
                 gb2.style.display = '';
+                document.getElementById('points-label-p1').style.display = '';
+                document.getElementById('points-label-p2').style.display = '';
+                document.getElementById('score-p1').classList.remove('free-score');
+                document.getElementById('score-p2').classList.remove('free-score');
                 document.getElementById('score-p1').textContent = getPointDisplay(0);
                 document.getElementById('score-p2').textContent = getPointDisplay(1);
                 document.getElementById('games-p1').textContent = games[0];
