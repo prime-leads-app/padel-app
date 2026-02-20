@@ -91,6 +91,17 @@
             box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
         }
 
+        .score-card {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .score-card:active {
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+
         .card-header-row {
             display: flex;
             align-items: center;
@@ -177,17 +188,6 @@
             line-height: 1;
         }
 
-        .btn-point {
-            font-size: 2.5rem;
-            font-weight: 900;
-            touch-action: manipulation;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            padding: 0;
-        }
 
         /* ── Separator ── */
         .vs-separator {
@@ -304,13 +304,6 @@
                 flex: 1;
             }
 
-            .btn-point {
-                flex: 1;
-                min-width: unset;
-                font-size: 4rem;
-                border-radius: 16px;
-            }
-
             .vs-separator {
                 display: flex;
                 align-items: center;
@@ -413,7 +406,7 @@
         <!-- Scoreboard -->
         <div class="scoreboard">
             <!-- Team 1 -->
-            <div class="score-card team1" id="card-p1">
+            <div class="score-card team1" id="card-p1" onclick="cardTap(event, 1)">
                 <div class="card-header-row">
                     <span class="serve-indicator d-none" id="serve-p1"></span>
                     <input type="text" class="player-name" value="Equipo 1" id="name-p1" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
@@ -432,7 +425,6 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-point" onclick="addPoint(1)" style="background:#EF5350;color:#fff;border:none">+</button>
                 </div>
             </div>
 
@@ -440,7 +432,7 @@
             <div class="vs-separator">VS</div>
 
             <!-- Team 2 -->
-            <div class="score-card team2" id="card-p2">
+            <div class="score-card team2" id="card-p2" onclick="cardTap(event, 2)">
                 <div class="card-header-row">
                     <span class="serve-indicator d-none" id="serve-p2"></span>
                     <input type="text" class="player-name" value="Equipo 2" id="name-p2" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
@@ -459,7 +451,6 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-point" onclick="addPoint(2)" style="background:#42A5F5;color:#fff;border:none">+</button>
                 </div>
             </div>
         </div>
@@ -571,6 +562,12 @@
 
         function toggleRules() {
             document.getElementById('rules-card').classList.toggle('d-none');
+        }
+
+        function cardTap(e, player) {
+            // No sumar punto si tocan el input del nombre
+            if (e.target.classList.contains('player-name')) return;
+            addPoint(player);
         }
 
         function addPoint(player) {
