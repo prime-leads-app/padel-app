@@ -322,12 +322,11 @@
 
             .scoreboard {
                 flex-direction: row;
-                flex-wrap: wrap;
                 align-items: stretch;
             }
 
             .score-card {
-                flex: 1 1 45%;
+                flex: 1;
                 padding: 12px 24px;
             }
 
@@ -340,12 +339,7 @@
             }
 
             .vs-separator {
-                flex: 1 1 100%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                font-size: 1.5rem;
-                padding: 8px 0;
+                padding: 4px 0;
             }
 
             .sets-table {
@@ -512,22 +506,6 @@
                 </div>
             </div>
 
-            <!-- Separator: tabla de sets y badge -->
-            <div class="vs-separator">
-                <table id="sets-table" class="sets-table" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="sets-row-p1"></tr>
-                        <tr id="sets-row-p2"></tr>
-                    </tbody>
-                </table>
-                <div class="golden-point-badge d-none" id="golden-badge">PUNTO DE ORO</div>
-            </div>
-
             <!-- Team 2 -->
             <div class="score-card team2" id="card-p2" onclick="cardTap(event, 2)">
                 <div class="winner-badge" id="winner-badge-p2">
@@ -549,6 +527,22 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- Stats y badge (debajo de las tarjetas) -->
+        <div class="vs-separator">
+            <div class="golden-point-badge d-none" id="golden-badge">PUNTO DE ORO</div>
+            <table id="sets-table" class="sets-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="sets-row-p1"></tr>
+                    <tr id="sets-row-p2"></tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- Controls -->
