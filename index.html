@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Padel Scoreboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Padel">
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+        }
+
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: 8px;
+            gap: 8px;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .header h1 { font-size: 1.1rem; margin: 0 0 6px; }
+
+        .mode-btn {
+            border-radius: 20px;
+            font-weight: 600;
+            touch-action: manipulation;
+        }
+
+        .mode-btn.active {
+            background: #e94560 !important;
+            border-color: #e94560 !important;
+        }
+
+        /* ── Config ── */
+        .config-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ── Scoreboard: vertical on mobile ── */
+        .scoreboard {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* ── Score Card ── */
+        .score-card {
+            border-radius: 14px;
+            padding: 12px 16px;
+            transition: box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .score-card.team1 { background: #0f3460; }
+        .score-card.team2 { background: #1a472a; }
+
+        .score-card.serving {
+            box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+        }
+
+        .player-name {
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            max-width: 200px;
+            border-bottom: 2px dashed rgba(255,255,255,0.25);
+            padding: 2px 4px;
+        }
+
+        .player-name:focus {
+            outline: none;
+            border-bottom-color: #ffc107;
+        }
+
+        .serve-indicator {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #ffc107;
+            display: inline-block;
+            margin-right: 4px;
+            animation: pulse 1.5s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .score-area {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .score-block {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            margin-bottom: 2px;
+        }
+
+        .score-games {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-points {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .btn-point {
+            font-size: 1.1rem;
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            min-height: 48px;
+            touch-action: manipulation;
+            width: 100%;
+            max-width: 250px;
+            margin-top: 8px;
+        }
+
+        /* ── Separator ── */
+        .vs-separator {
+            text-align: center;
+            font-weight: 900;
+            font-size: 1rem;
+            color: #e94560;
+            flex-shrink: 0;
+            padding: 2px 0;
+        }
+
+        /* ── Sets ── */
+        .sets-container {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .set-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 2px 8px;
+            min-width: 26px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .set-box.current {
+            background: rgba(233, 69, 96, 0.3);
+            border: 1px solid #e94560;
+        }
+
+        /* ── Controls ── */
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .controls-bar .btn {
+            min-height: 40px;
+            touch-action: manipulation;
+            font-size: 0.8rem;
+            flex: 1;
+            max-width: 130px;
+        }
+
+        /* ── History ── */
+        .history-card {
+            flex-shrink: 0;
+        }
+
+        .history-item {
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-bottom: 2px;
+        }
+
+        /* ── Winner ── */
+        .winner-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .winner-card {
+            background: linear-gradient(135deg, #e94560, #0f3460);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            animation: scaleIn 0.5s ease;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ── DESKTOP: side by side from 768px ── */
+        @media (min-width: 768px) {
+            .app-wrapper {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .scoreboard {
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .score-card {
+                flex: 1;
+                padding: 24px;
+            }
+
+            .vs-separator {
+                display: flex;
+                align-items: center;
+                font-size: 1.5rem;
+                padding: 0 12px;
+            }
+
+            .score-points { font-size: 5rem; }
+            .score-games { font-size: 2.5rem; }
+            .player-name { font-size: 1.2rem; }
+            .header h1 { font-size: 1.4rem; }
+        }
+
+        /* safe area for iPhones with notch */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .app-wrapper {
+                padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Header -->
+        <div class="header">
+            <h1>Padel Scoreboard</h1>
+            <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
+                <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
+            </div>
+        </div>
+
+        <!-- Config -->
+        <div id="padel-config">
+            <div class="config-row">
+                <small class="text-muted">Sets:</small>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-light py-0 px-2" onclick="setSetsToWin(1)" id="sets-1">1</button>
+                    <button class="btn btn-outline-light py-0 px-2 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
+                    <button class="btn btn-outline-light py-0 px-2" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                </div>
+                <small class="text-muted">Games:</small>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-light py-0 px-2 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
+                    <button class="btn btn-outline-light py-0 px-2" onclick="setGamesPerSet(4)" id="gps-4">4</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+            <!-- Team 1 -->
+            <div class="score-card team1" id="card-p1">
+                <div>
+                    <span class="serve-indicator d-none" id="serve-p1"></span>
+                    <input type="text" class="player-name" value="Equipo 1" id="name-p1" maxlength="12">
+                </div>
+                <div class="sets-container my-1" id="sets-p1"></div>
+                <div class="score-area">
+                    <div class="score-block" id="games-block-p1">
+                        <div class="score-label">JUEGOS</div>
+                        <div class="score-games" id="games-p1">0</div>
+                    </div>
+                    <div class="score-block">
+                        <div class="score-label">PUNTOS</div>
+                        <div class="score-points text-warning" id="score-p1">0</div>
+                    </div>
+                </div>
+                <button class="btn btn-success btn-point" onclick="addPoint(1)">+ Punto</button>
+            </div>
+
+            <!-- VS -->
+            <div class="vs-separator">VS</div>
+
+            <!-- Team 2 -->
+            <div class="score-card team2" id="card-p2">
+                <div>
+                    <span class="serve-indicator d-none" id="serve-p2"></span>
+                    <input type="text" class="player-name" value="Equipo 2" id="name-p2" maxlength="12">
+                </div>
+                <div class="sets-container my-1" id="sets-p2"></div>
+                <div class="score-area">
+                    <div class="score-block" id="games-block-p2">
+                        <div class="score-label">JUEGOS</div>
+                        <div class="score-games" id="games-p2">0</div>
+                    </div>
+                    <div class="score-block">
+                        <div class="score-label">PUNTOS</div>
+                        <div class="score-points text-info" id="score-p2">0</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-point" onclick="addPoint(2)">+ Punto</button>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-bar">
+            <button class="btn btn-outline-warning btn-sm" onclick="undoPoint()">Deshacer</button>
+            <button class="btn btn-outline-info btn-sm" onclick="toggleServe()">Saque</button>
+            <button class="btn btn-outline-danger btn-sm" onclick="resetMatch()">Reiniciar</button>
+        </div>
+
+        <!-- History -->
+        <div class="card bg-dark border-secondary history-card">
+            <div class="card-header py-1 d-flex justify-content-between align-items-center" onclick="toggleHistory()" style="cursor:pointer">
+                <small>Historial</small>
+                <span class="btn btn-outline-secondary btn-sm py-0 px-2" id="history-toggle-btn">+</span>
+            </div>
+            <div class="card-body p-2 d-none" id="history-body" style="max-height: 120px; overflow-y: auto;">
+                <div id="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Winner Overlay -->
+    <div class="winner-overlay d-none" id="winner-overlay">
+        <div class="winner-card">
+            <div class="display-4 mb-2">&#127942;</div>
+            <h4 id="winner-name" class="mb-3"></h4>
+            <button class="btn btn-light btn-lg" onclick="resetMatch()">Nuevo Partido</button>
+        </div>
+    </div>
+
+    <script>
+        const PADEL_POINTS = ['0', '15', '30', '40'];
+        let mode = 'padel';
+        let setsToWin = 2;
+        let gamesPerSet = 6;
+        let serve = 1;
+        let history = [];
+        let matchOver = false;
+
+        let points = [0, 0];
+        let games = [0, 0];
+        let sets = [[], []];
+        let setsWon = [0, 0];
+        let tiebreak = false;
+        let advantage = 0;
+        let freePoints = [0, 0];
+
+        render();
+        updateServeUI();
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('btn-padel').classList.toggle('active', m === 'padel');
+            document.getElementById('btn-free').classList.toggle('active', m === 'free');
+            document.getElementById('padel-config').classList.toggle('d-none', m === 'free');
+            resetMatch();
+        }
+
+        function setSetsToWin(n) {
+            setsToWin = n;
+            document.querySelectorAll('[id^="sets-"]').forEach(b => {
+                if (b.id.startsWith('sets-p')) return;
+                b.classList.toggle('active', b.id === 'sets-' + n);
+            });
+            resetMatch();
+        }
+
+        function setGamesPerSet(n) {
+            gamesPerSet = n;
+            document.getElementById('gps-6').classList.toggle('active', n === 6);
+            document.getElementById('gps-4').classList.toggle('active', n === 4);
+            resetMatch();
+        }
+
+        function addPoint(player) {
+            if (matchOver) return;
+            saveState();
+            if (mode === 'free') {
+                freePoints[player - 1]++;
+                addHistory(`${getName(player)} anota (${freePoints[0]} - ${freePoints[1]})`);
+            } else {
+                scorePadelPoint(player);
+            }
+            render();
+        }
+
+        function scorePadelPoint(player) {
+            const p = player - 1, o = 1 - p;
+
+            if (tiebreak) {
+                points[p]++;
+                const total = points[0] + points[1];
+                if (points[p] >= 7 && points[p] - points[o] >= 2) {
+                    addHistory(`${getName(player)} gana tie-break (${points[0]}-${points[1]})`);
+                    winGame(player);
+                    return;
+                }
+                if (total % 2 === 1) { serve = serve === 1 ? 2 : 1; updateServeUI(); }
+                addHistory(`${getName(player)} punto TB (${points[0]}-${points[1]})`);
+                return;
+            }
+
+            if (points[0] === 3 && points[1] === 3) {
+                if (advantage === 0) { advantage = player; addHistory(`${getName(player)} ventaja`); }
+                else if (advantage === player) { addHistory(`${getName(player)} gana juego`); winGame(player); }
+                else { advantage = 0; addHistory('Iguales'); }
+                return;
+            }
+            if (advantage === player) { addHistory(`${getName(player)} gana juego`); winGame(player); return; }
+            if (advantage !== 0 && advantage !== player) { advantage = 0; addHistory('Iguales'); return; }
+
+            points[p]++;
+            if (points[p] > 3) { addHistory(`${getName(player)} gana juego`); winGame(player); return; }
+            addHistory(`${getName(player)} punto (${getPointDisplay(0)}-${getPointDisplay(1)})`);
+        }
+
+        function winGame(player) {
+            const p = player - 1, o = 1 - p;
+            games[p]++; points = [0, 0]; advantage = 0;
+            const wasTB = tiebreak; tiebreak = false;
+            serve = serve === 1 ? 2 : 1; updateServeUI();
+
+            if (games[p] >= gamesPerSet && games[p] - games[o] >= 2) { winSet(player); return; }
+            if (games[0] === gamesPerSet && games[1] === gamesPerSet) { tiebreak = true; addHistory('Tie-break!'); }
+            if (wasTB && games[p] === gamesPerSet + 1) winSet(player);
+        }
+
+        function winSet(player) {
+            const p = player - 1;
+            sets[0].push(games[0]); sets[1].push(games[1]);
+            setsWon[p]++;
+            addHistory(`${getName(player)} gana SET ${setsWon[0]}-${setsWon[1]} (${games[0]}-${games[1]})`);
+            games = [0, 0]; points = [0, 0]; tiebreak = false;
+            if (setsWon[p] >= setsToWin) {
+                matchOver = true;
+                addHistory(`${getName(player)} GANA EL PARTIDO`);
+                showWinner(player);
+            }
+        }
+
+        function getPointDisplay(idx) {
+            if (tiebreak) return points[idx].toString();
+            if (advantage === idx + 1) return 'AD';
+            if (advantage !== 0 && advantage !== idx + 1 && points[0] === 3 && points[1] === 3) return '40';
+            return PADEL_POINTS[Math.min(points[idx], 3)];
+        }
+
+        function saveState() {
+            history.push({
+                points: [...points], games: [...games],
+                sets: [sets[0].slice(), sets[1].slice()],
+                setsWon: [...setsWon], tiebreak, advantage, serve,
+                matchOver, freePoints: [...freePoints], mode
+            });
+        }
+
+        function undoPoint() {
+            if (!history.length) return;
+            const s = history.pop();
+            points = s.points; games = s.games; sets = s.sets;
+            setsWon = s.setsWon; tiebreak = s.tiebreak;
+            advantage = s.advantage; serve = s.serve;
+            matchOver = s.matchOver; freePoints = s.freePoints;
+            document.getElementById('winner-overlay').classList.add('d-none');
+            const list = document.getElementById('history-list');
+            if (list.lastChild) list.removeChild(list.lastChild);
+            updateServeUI(); render();
+        }
+
+        function toggleServe() { serve = serve === 1 ? 2 : 1; updateServeUI(); }
+
+        function updateServeUI() {
+            document.getElementById('serve-p1').classList.toggle('d-none', serve !== 1);
+            document.getElementById('serve-p2').classList.toggle('d-none', serve !== 2);
+            document.getElementById('card-p1').classList.toggle('serving', serve === 1);
+            document.getElementById('card-p2').classList.toggle('serving', serve === 2);
+        }
+
+        function render() {
+            const gb1 = document.getElementById('games-block-p1');
+            const gb2 = document.getElementById('games-block-p2');
+
+            if (mode === 'free') {
+                document.getElementById('score-p1').textContent = freePoints[0];
+                document.getElementById('score-p2').textContent = freePoints[1];
+                document.getElementById('games-p1').textContent = '';
+                document.getElementById('games-p2').textContent = '';
+                document.getElementById('sets-p1').innerHTML = '';
+                document.getElementById('sets-p2').innerHTML = '';
+                gb1.style.display = 'none';
+                gb2.style.display = 'none';
+            } else {
+                gb1.style.display = '';
+                gb2.style.display = '';
+                document.getElementById('score-p1').textContent = getPointDisplay(0);
+                document.getElementById('score-p2').textContent = getPointDisplay(1);
+                document.getElementById('games-p1').textContent = games[0];
+                document.getElementById('games-p2').textContent = games[1];
+                renderSets();
+            }
+        }
+
+        function renderSets() {
+            for (let p = 0; p < 2; p++) {
+                const c = document.getElementById('sets-p' + (p + 1));
+                let html = '';
+                for (let i = 0; i < sets[p].length; i++) html += `<div class="set-box">${sets[p][i]}</div>`;
+                if (!matchOver) html += `<div class="set-box current">${games[p]}</div>`;
+                c.innerHTML = html;
+            }
+        }
+
+        function addHistory(text) {
+            const list = document.getElementById('history-list');
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+            div.textContent = `${t} - ${text}`;
+            list.appendChild(div);
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function toggleHistory() {
+            const body = document.getElementById('history-body');
+            const btn = document.getElementById('history-toggle-btn');
+            body.classList.toggle('d-none');
+            btn.textContent = body.classList.contains('d-none') ? '+' : '-';
+        }
+
+        function getName(p) { return document.getElementById('name-p' + p).value || ('Equipo ' + p); }
+
+        function showWinner(p) {
+            document.getElementById('winner-name').textContent = `${getName(p)} gana el partido!`;
+            document.getElementById('winner-overlay').classList.remove('d-none');
+        }
+
+        function resetMatch() {
+            points = [0, 0]; games = [0, 0]; sets = [[], []]; setsWon = [0, 0];
+            tiebreak = false; advantage = 0; matchOver = false;
+            freePoints = [0, 0]; history = []; serve = 1;
+            updateServeUI();
+            document.getElementById('history-list').innerHTML = '';
+            document.getElementById('winner-overlay').classList.add('d-none');
+            render();
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
