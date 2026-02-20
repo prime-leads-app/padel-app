@@ -280,7 +280,7 @@
         /* ── DESKTOP: side by side from 768px ── */
         @media (min-width: 768px) {
             .app-wrapper {
-                max-width: 900px;
+                max-width: 1200px;
                 margin: 0 auto;
                 padding: 16px;
                 gap: 12px;
@@ -296,18 +296,33 @@
                 padding: 24px;
             }
 
+            .card-body-row {
+                flex: 1;
+            }
+
+            .card-info {
+                flex: 1;
+            }
+
+            .btn-point {
+                flex: 1;
+                min-width: unset;
+                font-size: 4rem;
+                border-radius: 16px;
+            }
+
             .vs-separator {
                 display: flex;
                 align-items: center;
                 font-size: 1.5rem;
-                padding: 0 12px;
+                padding: 0 8px;
+                flex-shrink: 0;
             }
 
-            .score-points { font-size: 5rem; }
-            .score-games { font-size: 2.5rem; }
-            .player-name { font-size: 1.2rem; }
+            .score-points { font-size: 8rem; }
+            .score-games { font-size: 5rem; }
+            .player-name { font-size: 1.4rem; }
             .header h1 { font-size: 1.4rem; }
-            .btn-point { min-width: 100px; font-size: 2rem; }
         }
 
         /* safe area for iPhones with notch */
