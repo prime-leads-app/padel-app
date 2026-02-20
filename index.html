@@ -679,6 +679,8 @@
             const prevSets = setsWon[0] + setsWon[1];
             if (mode === 'free') {
                 freePoints[player - 1]++;
+                serve = player;
+                updateServeUI();
                 addHistory(`${getName(player)} anota (${freePoints[0]} - ${freePoints[1]})`);
                 playSound('point');
             } else {
