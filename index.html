@@ -782,6 +782,7 @@
             document.getElementById('winner-overlay').classList.add('d-none');
             const list = document.getElementById('history-list');
             if (list.firstChild) list.removeChild(list.firstChild);
+            lastPointTime = 0;
             updateServeUI(); render();
         }
 
