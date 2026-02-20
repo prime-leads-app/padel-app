@@ -485,7 +485,9 @@
                 </div>
                 <div class="card-header-row">
                     <span class="serve-indicator d-none" id="serve-p1"></span>
-                    <input type="text" class="player-name" value="Equipo 1" id="name-p1" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <input type="text" class="player-name" value="Jugador 1" id="name-p1a" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <span style="opacity:0.4; margin:0 2px;">/</span>
+                    <input type="text" class="player-name" value="Jugador 2" id="name-p1b" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
                 </div>
                 <div class="card-body-row">
                     <div class="card-info">
@@ -520,7 +522,9 @@
                 </div>
                 <div class="card-header-row">
                     <span class="serve-indicator d-none" id="serve-p2"></span>
-                    <input type="text" class="player-name" value="Equipo 2" id="name-p2" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <input type="text" class="player-name" value="Jugador 3" id="name-p2a" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <span style="opacity:0.4; margin:0 2px;">/</span>
+                    <input type="text" class="player-name" value="Jugador 4" id="name-p2b" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
                 </div>
                 <div class="card-body-row">
                     <div class="card-info">
@@ -960,8 +964,7 @@
             // Filas por equipo
             for (let p = 0; p < 2; p++) {
                 const row = p === 0 ? row1 : row2;
-                const name = getName(p + 1);
-                const shortName = name.length > 8 ? name.substring(0, 8) : name;
+                const shortName = getShortName(p + 1);
                 let rHtml = `<td class="team-name-cell">${shortName}</td>`;
 
                 for (let i = 0; i < maxSets; i++) {
@@ -1001,7 +1004,19 @@
             btn.textContent = body.classList.contains('d-none') ? '+' : '-';
         }
 
-        function getName(p) { return document.getElementById('name-p' + p).value || ('Equipo ' + p); }
+        function getName(p) {
+            const a = document.getElementById('name-p' + p + 'a').value || ('Jugador ' + (p * 2 - 1));
+            const b = document.getElementById('name-p' + p + 'b').value || ('Jugador ' + (p * 2));
+            return a + '/' + b;
+        }
+
+        function getShortName(p) {
+            const a = document.getElementById('name-p' + p + 'a').value || ('J' + (p * 2 - 1));
+            const b = document.getElementById('name-p' + p + 'b').value || ('J' + (p * 2));
+            const sa = a.length > 5 ? a.substring(0, 5) : a;
+            const sb = b.length > 5 ? b.substring(0, 5) : b;
+            return sa + '/' + sb;
+        }
 
         function showWinner(p) {
             let scoreText = '';
@@ -1022,8 +1037,10 @@
                 points, games, sets, setsWon, tiebreak, advantage,
                 freePoints,
                 names: [
-                    document.getElementById('name-p1').value,
-                    document.getElementById('name-p2').value
+                    document.getElementById('name-p1a').value,
+                    document.getElementById('name-p1b').value,
+                    document.getElementById('name-p2a').value,
+                    document.getElementById('name-p2b').value
                 ],
                 historyHTML: document.getElementById('history-list').innerHTML
             };
@@ -1048,9 +1065,11 @@
                 tiebreak = d.tiebreak || false;
                 advantage = d.advantage || 0;
                 freePoints = d.freePoints || [0, 0];
-                if (d.names) {
-                    document.getElementById('name-p1').value = d.names[0];
-                    document.getElementById('name-p2').value = d.names[1];
+                if (d.names && d.names.length === 4) {
+                    document.getElementById('name-p1a').value = d.names[0];
+                    document.getElementById('name-p1b').value = d.names[1];
+                    document.getElementById('name-p2a').value = d.names[2];
+                    document.getElementById('name-p2b').value = d.names[3];
                 }
                 if (d.historyHTML) {
                     document.getElementById('history-list').innerHTML = d.historyHTML;
