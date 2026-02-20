@@ -198,6 +198,46 @@
             padding: 2px 0;
         }
 
+        .sets-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .sets-table th, .sets-table td {
+            text-align: center;
+            padding: 3px 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sets-table th {
+            color: #FFD54F;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .sets-table td {
+            color: #fff;
+        }
+
+        .sets-table td.team-name-cell {
+            text-align: left;
+            font-size: 0.7rem;
+            max-width: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sets-table td.current-set {
+            background: rgba(233, 69, 96, 0.3);
+        }
+
+        .sets-table .team1-row td.team-name-cell { color: #ef9a9a; }
+        .sets-table .team2-row td.team-name-cell { color: #90caf9; }
+
         .golden-point-badge {
             background: #FFD700;
             color: #000;
@@ -454,13 +494,19 @@
                 </div>
             </div>
 
-            <!-- Separator: sets y juegos entre tarjetas -->
+            <!-- Separator: tabla de sets y badge -->
             <div class="vs-separator">
-                <div id="mid-stats" style="display:none; align-items:center; justify-content:center; gap:12px; font-weight:800; font-size:0.9rem;">
-                    <span>SETS: <span id="sets-p1">0</span> - <span id="sets-p2">0</span></span>
-                    <span style="opacity:0.4;">|</span>
-                    <span>JUEGOS: <span id="games-p1">0</span> - <span id="games-p2">0</span></span>
-                </div>
+                <table id="sets-table" class="sets-table" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="sets-row-p1"></tr>
+                        <tr id="sets-row-p2"></tr>
+                    </tbody>
+                </table>
                 <div class="golden-point-badge d-none" id="golden-badge">PUNTO DE ORO</div>
             </div>
 
@@ -815,24 +861,21 @@
         }
 
         function render() {
-            const midStats = document.getElementById('mid-stats');
+            const setsTable = document.getElementById('sets-table');
 
             if (mode === 'free') {
                 document.getElementById('score-p1').textContent = freePoints[0];
                 document.getElementById('score-p2').textContent = freePoints[1];
                 document.getElementById('score-p1').classList.add('free-score');
                 document.getElementById('score-p2').classList.add('free-score');
-                midStats.style.display = 'none';
+                setsTable.style.display = 'none';
             } else {
                 document.getElementById('score-p1').classList.add('free-score');
                 document.getElementById('score-p2').classList.add('free-score');
                 document.getElementById('score-p1').textContent = getPointDisplay(0);
                 document.getElementById('score-p2').textContent = getPointDisplay(1);
-                document.getElementById('games-p1').textContent = games[0];
-                document.getElementById('games-p2').textContent = games[1];
-                document.getElementById('sets-p1').textContent = setsWon[0];
-                document.getElementById('sets-p2').textContent = setsWon[1];
-                midStats.style.display = 'flex';
+                renderSetsTable();
+                setsTable.style.display = 'table';
             }
 
             // Indicador de punto de oro / ventaja / iguales
@@ -860,6 +903,46 @@
             }
 
             saveToStorage();
+        }
+
+        function renderSetsTable() {
+            const maxSets = setsToWin * 2 - 1; // best of: 1→1, 2→3, 3→5
+            const thead = document.querySelector('#sets-table thead tr');
+            const row1 = document.getElementById('sets-row-p1');
+            const row2 = document.getElementById('sets-row-p2');
+
+            // Header: nombre vacío + S1, S2... + PTS
+            let hHtml = '<th></th>';
+            for (let i = 1; i <= maxSets; i++) hHtml += `<th>S${i}</th>`;
+            hHtml += '<th>PTS</th>';
+            thead.innerHTML = hHtml;
+
+            // Filas por equipo
+            for (let p = 0; p < 2; p++) {
+                const row = p === 0 ? row1 : row2;
+                const name = getName(p + 1);
+                const shortName = name.length > 8 ? name.substring(0, 8) : name;
+                let rHtml = `<td class="team-name-cell">${shortName}</td>`;
+
+                for (let i = 0; i < maxSets; i++) {
+                    const isCurrent = i === sets[p].length;
+                    const cls = isCurrent ? ' class="current-set"' : '';
+                    if (i < sets[p].length) {
+                        // Set terminado
+                        rHtml += `<td${cls}>${sets[p][i]}</td>`;
+                    } else if (isCurrent && !matchOver) {
+                        // Set actual
+                        rHtml += `<td${cls}>${games[p]}</td>`;
+                    } else {
+                        rHtml += `<td${cls}>-</td>`;
+                    }
+                }
+
+                // Puntos del juego actual
+                rHtml += `<td class="current-set">${getPointDisplay(p)}</td>`;
+                row.innerHTML = rHtml;
+                row.className = p === 0 ? 'team1-row' : 'team2-row';
+            }
         }
 
         function addHistory(text) {
