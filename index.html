@@ -69,8 +69,6 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            flex: 1;
-            min-height: 0;
         }
 
         /* ── Score Card ── */
@@ -80,8 +78,6 @@
             transition: box-shadow 0.3s;
             display: flex;
             flex-direction: column;
-            flex: 1;
-            min-height: 0;
         }
 
         .score-card.team1 { background: #B71C1C; }
@@ -323,6 +319,7 @@
             .scoreboard {
                 flex-direction: row;
                 align-items: stretch;
+                gap: 12px;
             }
 
             .score-card {
