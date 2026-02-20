@@ -490,6 +490,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Winner Card (inline) -->
+            <div class="d-none" id="winner-card-inline" style="
+                border-radius: 14px;
+                padding: 24px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                min-height: 0;
+                background: linear-gradient(135deg, #FFD700, #e94560, #0f3460);
+                animation: scaleIn 0.5s ease;
+            ">
+                <div style="font-size: 5rem; line-height:1;">&#127942;</div>
+                <h2 id="winner-name" style="margin: 12px 0; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"></h2>
+                <p id="winner-score" style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 16px;"></p>
+                <button class="btn btn-light btn-lg" onclick="resetMatch()" style="font-weight:700; padding: 10px 32px;">Nuevo Partido</button>
+            </div>
         </div>
 
         <!-- Controls -->
@@ -535,14 +555,6 @@
         </div>
     </div>
 
-    <!-- Winner Overlay -->
-    <div class="winner-overlay d-none" id="winner-overlay">
-        <div class="winner-card">
-            <div class="display-4 mb-2">&#127942;</div>
-            <h4 id="winner-name" class="mb-3"></h4>
-            <button class="btn btn-light btn-lg" onclick="resetMatch()">Nuevo Partido</button>
-        </div>
-    </div>
 
     <script>
         const PADEL_POINTS = ['0', '15', '30', '40'];
@@ -702,7 +714,14 @@
                 serve = player;
                 updateServeUI();
                 addHistory(`${getName(player)} anota (${freePoints[0]} - ${freePoints[1]})`);
-                playSound('point');
+                if (freePoints[player - 1] >= 30) {
+                    matchOver = true;
+                    addHistory(`${getName(player)} GANA - llego a 30 puntos!`);
+                    playSound('set');
+                    showWinner(player);
+                } else {
+                    playSound('point');
+                }
             } else {
                 scorePadelPoint(player);
                 // Sonido segun lo que paso
@@ -801,11 +820,18 @@
             setsWon = s.setsWon; tiebreak = s.tiebreak;
             advantage = s.advantage; serve = s.serve;
             matchOver = s.matchOver; freePoints = s.freePoints;
-            document.getElementById('winner-overlay').classList.add('d-none');
+            hideWinnerCard();
             const list = document.getElementById('history-list');
             if (list.firstChild) list.removeChild(list.firstChild);
             lastPointTime = 0;
             updateServeUI(); render();
+        }
+
+        function hideWinnerCard() {
+            document.getElementById('winner-card-inline').classList.add('d-none');
+            document.getElementById('card-p1').classList.remove('d-none');
+            document.getElementById('card-p2').classList.remove('d-none');
+            document.querySelector('.vs-separator').classList.remove('d-none');
         }
 
         function toggleServe() { serve = serve === 1 ? 2 : 1; updateServeUI(); }
@@ -903,7 +929,19 @@
 
         function showWinner(p) {
             document.getElementById('winner-name').textContent = `${getName(p)} gana el partido!`;
-            document.getElementById('winner-overlay').classList.remove('d-none');
+            // Mostrar marcador final
+            let scoreText = '';
+            if (mode === 'padel') {
+                scoreText = `Sets: ${setsWon[0]} - ${setsWon[1]}`;
+            } else {
+                scoreText = `${freePoints[0]} - ${freePoints[1]}`;
+            }
+            document.getElementById('winner-score').textContent = scoreText;
+            // Ocultar tarjetas y separador, mostrar tarjeta ganador
+            document.getElementById('card-p1').classList.add('d-none');
+            document.getElementById('card-p2').classList.add('d-none');
+            document.querySelector('.vs-separator').classList.add('d-none');
+            document.getElementById('winner-card-inline').classList.remove('d-none');
         }
 
         // ── Persistencia ──
@@ -988,7 +1026,7 @@
             freePoints = [0, 0]; history = []; serve = 1;
             updateServeUI();
             document.getElementById('history-list').innerHTML = '';
-            document.getElementById('winner-overlay').classList.add('d-none');
+            hideWinnerCard();
             lastPointTime = 0;
             render();
         }
