@@ -757,7 +757,6 @@
                 const c = document.getElementById('sets-p' + (p + 1));
                 let html = '';
                 for (let i = 0; i < sets[p].length; i++) html += `<div class="set-box">${sets[p][i]}</div>`;
-                if (!matchOver) html += `<div class="set-box current">${games[p]}</div>`;
                 c.innerHTML = html;
             }
         }
