@@ -614,7 +614,18 @@
         updateServeUI();
 
         function setMode(m) {
+            // Guardar nombres del modo actual antes de cambiar
+            saveToStorage();
             mode = m;
+            // Cargar nombres del nuevo modo
+            const raw = localStorage.getItem('padel-state');
+            if (raw) {
+                try {
+                    const d = JSON.parse(raw);
+                    const modeNames = m === 'padel' ? d.namesPadel : d.namesFree;
+                    if (modeNames && modeNames.length === 4) setNamesUI(modeNames);
+                } catch(e) {}
+            }
             document.getElementById('btn-padel').classList.toggle('active', m === 'padel');
             document.getElementById('btn-free').classList.toggle('active', m === 'free');
             document.getElementById('padel-config').classList.toggle('d-none', m === 'free');
@@ -1031,17 +1042,29 @@
         }
 
         // ── Persistencia ──
+        function getCurrentNames() {
+            return [
+                document.getElementById('name-p1a').value,
+                document.getElementById('name-p1b').value,
+                document.getElementById('name-p2a').value,
+                document.getElementById('name-p2b').value
+            ];
+        }
+
+        function setNamesUI(names) {
+            document.getElementById('name-p1a').value = names[0] || 'Jugador 1';
+            document.getElementById('name-p1b').value = names[1] || 'Jugador 2';
+            document.getElementById('name-p2a').value = names[2] || 'Jugador 3';
+            document.getElementById('name-p2b').value = names[3] || 'Jugador 4';
+        }
+
         function saveToStorage() {
             const data = {
                 mode, setsToWin, gamesPerSet, deuceMode, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage,
                 freePoints,
-                names: [
-                    document.getElementById('name-p1a').value,
-                    document.getElementById('name-p1b').value,
-                    document.getElementById('name-p2a').value,
-                    document.getElementById('name-p2b').value
-                ],
+                namesPadel: mode === 'padel' ? getCurrentNames() : (JSON.parse(localStorage.getItem('padel-state') || '{}').namesPadel || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
+                namesFree: mode === 'free' ? getCurrentNames() : (JSON.parse(localStorage.getItem('padel-state') || '{}').namesFree || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
                 historyHTML: document.getElementById('history-list').innerHTML
             };
             localStorage.setItem('padel-state', JSON.stringify(data));
@@ -1065,11 +1088,9 @@
                 tiebreak = d.tiebreak || false;
                 advantage = d.advantage || 0;
                 freePoints = d.freePoints || [0, 0];
-                if (d.names && d.names.length === 4) {
-                    document.getElementById('name-p1a').value = d.names[0];
-                    document.getElementById('name-p1b').value = d.names[1];
-                    document.getElementById('name-p2a').value = d.names[2];
-                    document.getElementById('name-p2b').value = d.names[3];
+                const modeNames = mode === 'padel' ? d.namesPadel : d.namesFree;
+                if (modeNames && modeNames.length === 4) {
+                    setNamesUI(modeNames);
                 }
                 if (d.historyHTML) {
                     document.getElementById('history-list').innerHTML = d.historyHTML;
