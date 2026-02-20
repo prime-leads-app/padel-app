@@ -30,8 +30,8 @@
             flex-direction: column;
             min-height: 100vh;
             min-height: 100dvh;
-            padding: 8px;
-            gap: 8px;
+            padding: 6px;
+            gap: 4px;
         }
 
         /* ── Header ── */
@@ -68,7 +68,7 @@
         .scoreboard {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             flex: 1;
             min-height: 0;
         }
@@ -76,7 +76,7 @@
         /* ── Score Card ── */
         .score-card {
             border-radius: 14px;
-            padding: 10px;
+            padding: 6px 10px;
             transition: box-shadow 0.3s;
             display: flex;
             flex-direction: column;
@@ -124,7 +124,7 @@
         .card-header-row {
             display: flex;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
         }
 
         .card-body-row {
@@ -195,7 +195,7 @@
             font-size: 1rem;
             color: #e94560;
             flex-shrink: 0;
-            padding: 2px 0;
+            padding: 0;
         }
 
         .sets-table {
@@ -910,8 +910,8 @@
                 document.getElementById('score-p2').classList.add('free-score');
                 setsTable.style.display = 'none';
             } else {
-                document.getElementById('score-p1').classList.add('free-score');
-                document.getElementById('score-p2').classList.add('free-score');
+                document.getElementById('score-p1').classList.remove('free-score');
+                document.getElementById('score-p2').classList.remove('free-score');
                 document.getElementById('score-p1').textContent = getPointDisplay(0);
                 document.getElementById('score-p2').textContent = getPointDisplay(1);
                 renderSetsTable();
