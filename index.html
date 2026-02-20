@@ -195,6 +195,12 @@
             margin-bottom: 2px;
         }
 
+        .score-sets {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
         .score-games {
             font-size: 5rem;
             font-weight: 800;
@@ -332,6 +338,7 @@
 
             .score-points { font-size: 12rem; }
             .score-games { font-size: 7rem; }
+            .score-sets { font-size: 5rem; }
             .player-name { font-size: 1.8rem; }
             .header h1 { font-size: 1.4rem; }
         }
@@ -475,6 +482,10 @@
                 <div class="card-body-row">
                     <div class="card-info">
                         <div class="score-area">
+                            <div class="score-block" id="sets-block-p1">
+                                <div class="score-label">SETS</div>
+                                <div class="score-sets" id="sets-p1">0</div>
+                            </div>
                             <div class="score-block" id="games-block-p1">
                                 <div class="score-label">JUEGOS</div>
                                 <div class="score-games" id="games-p1">0</div>
@@ -490,7 +501,6 @@
 
             <!-- Separator -->
             <div class="vs-separator">
-                <div class="d-none" id="sets-score" style="font-size:1.1rem; font-weight:800; letter-spacing:2px;">SETS: 0 - 0</div>
                 <div class="golden-point-badge d-none" id="golden-badge">PUNTO DE ORO</div>
             </div>
 
@@ -509,6 +519,10 @@
                 <div class="card-body-row">
                     <div class="card-info">
                         <div class="score-area">
+                            <div class="score-block" id="sets-block-p2">
+                                <div class="score-label">SETS</div>
+                                <div class="score-sets" id="sets-p2">0</div>
+                            </div>
                             <div class="score-block" id="games-block-p2">
                                 <div class="score-label">JUEGOS</div>
                                 <div class="score-games" id="games-p2">0</div>
@@ -857,6 +871,9 @@
             const gb1 = document.getElementById('games-block-p1');
             const gb2 = document.getElementById('games-block-p2');
 
+            const sb1 = document.getElementById('sets-block-p1');
+            const sb2 = document.getElementById('sets-block-p2');
+
             if (mode === 'free') {
                 document.getElementById('score-p1').textContent = freePoints[0];
                 document.getElementById('score-p2').textContent = freePoints[1];
@@ -864,13 +881,15 @@
                 document.getElementById('score-p2').style.fontSize = '';
                 document.getElementById('score-p1').classList.add('free-score');
                 document.getElementById('score-p2').classList.add('free-score');
-                document.getElementById('games-p1').textContent = '';
-                document.getElementById('games-p2').textContent = '';
                 document.getElementById('points-label-p1').style.display = 'none';
                 document.getElementById('points-label-p2').style.display = 'none';
                 gb1.style.display = 'none';
                 gb2.style.display = 'none';
+                sb1.style.display = 'none';
+                sb2.style.display = 'none';
             } else {
+                sb1.style.display = '';
+                sb2.style.display = '';
                 gb1.style.display = '';
                 gb2.style.display = '';
                 document.getElementById('points-label-p1').style.display = '';
@@ -881,15 +900,8 @@
                 document.getElementById('score-p2').textContent = getPointDisplay(1);
                 document.getElementById('games-p1').textContent = games[0];
                 document.getElementById('games-p2').textContent = games[1];
-            }
-
-            // Sets score indicator
-            const setsScore = document.getElementById('sets-score');
-            if (mode === 'padel') {
-                setsScore.classList.remove('d-none');
-                setsScore.textContent = `SETS: ${setsWon[0]} - ${setsWon[1]}`;
-            } else {
-                setsScore.classList.add('d-none');
+                document.getElementById('sets-p1').textContent = setsWon[0];
+                document.getElementById('sets-p2').textContent = setsWon[1];
             }
 
             // Indicador de punto de oro / ventaja / iguales
