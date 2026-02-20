@@ -219,27 +219,6 @@
             50% { opacity: 0.7; box-shadow: 0 0 20px rgba(255, 215, 0, 1); }
         }
 
-        /* ── Sets ── */
-        .sets-container {
-            display: flex;
-            gap: 4px;
-            justify-content: center;
-        }
-
-        .set-box {
-            background: rgba(255,255,255,0.1);
-            border-radius: 6px;
-            padding: 2px 8px;
-            min-width: 26px;
-            text-align: center;
-            font-size: 0.8rem;
-        }
-
-        .set-box.current {
-            background: rgba(233, 69, 96, 0.3);
-            border: 1px solid #e94560;
-        }
-
         /* ── Controls ── */
         .controls-bar {
             display: flex;
@@ -468,7 +447,6 @@
                     <span class="serve-indicator d-none" id="serve-p1"></span>
                     <input type="text" class="player-name" value="Equipo 1" id="name-p1" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
                 </div>
-                <div class="sets-container" id="sets-p1"></div>
                 <div class="card-body-row">
                     <div class="card-info">
                         <div class="score-area">
@@ -497,7 +475,6 @@
                     <span class="serve-indicator d-none" id="serve-p2"></span>
                     <input type="text" class="player-name" value="Equipo 2" id="name-p2" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
                 </div>
-                <div class="sets-container" id="sets-p2"></div>
                 <div class="card-body-row">
                     <div class="card-info">
                         <div class="score-area">
@@ -853,8 +830,6 @@
                 document.getElementById('score-p2').classList.add('free-score');
                 document.getElementById('games-p1').textContent = '';
                 document.getElementById('games-p2').textContent = '';
-                document.getElementById('sets-p1').innerHTML = '';
-                document.getElementById('sets-p2').innerHTML = '';
                 document.getElementById('points-label-p1').style.display = 'none';
                 document.getElementById('points-label-p2').style.display = 'none';
                 gb1.style.display = 'none';
@@ -870,7 +845,6 @@
                 document.getElementById('score-p2').textContent = getPointDisplay(1);
                 document.getElementById('games-p1').textContent = games[0];
                 document.getElementById('games-p2').textContent = games[1];
-                renderSets();
             }
 
             // Sets score indicator
@@ -907,15 +881,6 @@
             }
 
             saveToStorage();
-        }
-
-        function renderSets() {
-            for (let p = 0; p < 2; p++) {
-                const c = document.getElementById('sets-p' + (p + 1));
-                let html = '';
-                for (let i = 0; i < sets[p].length; i++) html += `<div class="set-box">${sets[p][i]}</div>`;
-                c.innerHTML = html;
-            }
         }
 
         function addHistory(text) {
