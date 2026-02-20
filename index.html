@@ -661,8 +661,14 @@
             } catch(e) {}
         }
 
+        let lastPointTime = 0;
+        const POINT_COOLDOWN = 3000; // 3 segundos
+
         function cardTap(e, player) {
             if (e.target.classList.contains('player-name')) return;
+            const now = Date.now();
+            if (now - lastPointTime < POINT_COOLDOWN) return;
+            lastPointTime = now;
             addPoint(player);
         }
 
