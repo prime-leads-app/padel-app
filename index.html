@@ -78,9 +78,7 @@
             padding: 10px;
             transition: box-shadow 0.3s;
             display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            gap: 10px;
+            flex-direction: column;
             flex: 1;
             min-height: 0;
         }
@@ -92,12 +90,27 @@
             box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
         }
 
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .card-body-row {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: 8px;
+            flex: 1;
+            min-height: 0;
+        }
+
         .card-info {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-width: 0;
+            align-items: center;
         }
 
         .player-name {
@@ -135,8 +148,8 @@
         .score-area {
             display: flex;
             align-items: baseline;
-            gap: 12px;
-            margin-top: 4px;
+            justify-content: center;
+            gap: 14px;
         }
 
         .score-block {
@@ -144,7 +157,7 @@
         }
 
         .score-label {
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             opacity: 0.5;
@@ -171,11 +184,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 110px;
-            aspect-ratio: 1;
+            flex: 1;
             padding: 0;
-            align-self: center;
-            flex-shrink: 0;
         }
 
         /* ── Separator ── */
@@ -338,24 +348,26 @@
         <div class="scoreboard">
             <!-- Team 1 -->
             <div class="score-card team1" id="card-p1">
-                <div class="card-info">
-                    <div>
-                        <span class="serve-indicator d-none" id="serve-p1"></span>
-                        <input type="text" class="player-name" value="Equipo 1" id="name-p1" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
-                    </div>
-                    <div class="sets-container" id="sets-p1"></div>
-                    <div class="score-area">
-                        <div class="score-block" id="games-block-p1">
-                            <div class="score-label">JUEGOS</div>
-                            <div class="score-games" id="games-p1">0</div>
-                        </div>
-                        <div class="score-block">
-                            <div class="score-label">PUNTOS</div>
-                            <div class="score-points text-warning" id="score-p1">0</div>
-                        </div>
-                    </div>
+                <div class="card-header-row">
+                    <span class="serve-indicator d-none" id="serve-p1"></span>
+                    <input type="text" class="player-name" value="Equipo 1" id="name-p1" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
                 </div>
-                <button class="btn btn-success btn-point" onclick="addPoint(1)">+</button>
+                <div class="sets-container" id="sets-p1"></div>
+                <div class="card-body-row">
+                    <div class="card-info">
+                        <div class="score-area">
+                            <div class="score-block" id="games-block-p1">
+                                <div class="score-label">JUEGOS</div>
+                                <div class="score-games" id="games-p1">0</div>
+                            </div>
+                            <div class="score-block">
+                                <div class="score-label">PUNTOS</div>
+                                <div class="score-points text-warning" id="score-p1">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-point" onclick="addPoint(1)">+</button>
+                </div>
             </div>
 
             <!-- VS -->
@@ -363,24 +375,26 @@
 
             <!-- Team 2 -->
             <div class="score-card team2" id="card-p2">
-                <div class="card-info">
-                    <div>
-                        <span class="serve-indicator d-none" id="serve-p2"></span>
-                        <input type="text" class="player-name" value="Equipo 2" id="name-p2" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
-                    </div>
-                    <div class="sets-container" id="sets-p2"></div>
-                    <div class="score-area">
-                        <div class="score-block" id="games-block-p2">
-                            <div class="score-label">JUEGOS</div>
-                            <div class="score-games" id="games-p2">0</div>
-                        </div>
-                        <div class="score-block">
-                            <div class="score-label">PUNTOS</div>
-                            <div class="score-points text-info" id="score-p2">0</div>
-                        </div>
-                    </div>
+                <div class="card-header-row">
+                    <span class="serve-indicator d-none" id="serve-p2"></span>
+                    <input type="text" class="player-name" value="Equipo 2" id="name-p2" maxlength="22" onchange="saveToStorage()" onblur="saveToStorage()">
                 </div>
-                <button class="btn btn-primary btn-point" onclick="addPoint(2)">+</button>
+                <div class="sets-container" id="sets-p2"></div>
+                <div class="card-body-row">
+                    <div class="card-info">
+                        <div class="score-area">
+                            <div class="score-block" id="games-block-p2">
+                                <div class="score-label">JUEGOS</div>
+                                <div class="score-games" id="games-p2">0</div>
+                            </div>
+                            <div class="score-block">
+                                <div class="score-label">PUNTOS</div>
+                                <div class="score-points text-info" id="score-p2">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-point" onclick="addPoint(2)">+</button>
+                </div>
             </div>
         </div>
 
