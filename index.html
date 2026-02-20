@@ -241,11 +241,12 @@
         }
 
         .history-item {
-            font-size: 0.75rem;
-            padding: 3px 6px;
-            background: rgba(255,255,255,0.05);
+            font-size: 0.8rem;
+            padding: 5px 8px;
+            background: #2c2c54;
+            color: #fff;
             border-radius: 4px;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
 
         /* ── Winner ── */
@@ -586,7 +587,7 @@
             matchOver = s.matchOver; freePoints = s.freePoints;
             document.getElementById('winner-overlay').classList.add('d-none');
             const list = document.getElementById('history-list');
-            if (list.lastChild) list.removeChild(list.lastChild);
+            if (list.firstChild) list.removeChild(list.firstChild);
             updateServeUI(); render();
         }
 
@@ -640,8 +641,7 @@
             div.className = 'history-item';
             const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
             div.textContent = `${t} - ${text}`;
-            list.appendChild(div);
-            list.scrollTop = list.scrollHeight;
+            list.insertBefore(div, list.firstChild);
         }
 
         function toggleHistory() {
