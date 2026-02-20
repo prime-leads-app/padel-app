@@ -342,6 +342,28 @@
                     <button class="btn btn-outline-light py-0 px-2 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
                     <button class="btn btn-outline-light py-0 px-2" onclick="setGamesPerSet(4)" id="gps-4">4</button>
                 </div>
+                <small class="text-muted">40-40:</small>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-light py-0 px-2 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
+                    <button class="btn btn-outline-light py-0 px-2" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm py-0 px-2" onclick="toggleRules()">?</button>
+            </div>
+        </div>
+
+        <!-- Rules -->
+        <div class="card bg-dark border-secondary d-none" id="rules-card" style="font-size:0.75rem;">
+            <div class="card-body p-2">
+                <strong>Reglas de puntuacion:</strong>
+                <ul class="mb-1 ps-3">
+                    <li><b>Puntos:</b> 0 → 15 → 30 → 40 → Juego</li>
+                    <li><b>40-40 Punto de Oro:</b> El siguiente punto gana el juego. Sin ventajas. (Regla WPT/Premier Padel)</li>
+                    <li><b>40-40 Ventaja:</b> Necesitas 2 puntos seguidos para ganar (ventaja + juego). Sistema tradicional.</li>
+                    <li><b>Set:</b> Gana el primero en llegar a 6 (o 4) juegos con 2 de diferencia.</li>
+                    <li><b>Tie-break:</b> A 6-6 juegos se juega tie-break (primero a 7 puntos, con 2 de diferencia).</li>
+                    <li><b>Partido:</b> Gana el que llegue primero al numero de sets configurado.</li>
+                </ul>
+                <button class="btn btn-outline-secondary btn-sm py-0 w-100" onclick="toggleRules()">Cerrar</button>
             </div>
         </div>
 
@@ -456,6 +478,7 @@
         let mode = 'padel';
         let setsToWin = 2;
         let gamesPerSet = 6;
+        let deuceMode = 'golden'; // 'golden' = punto de oro, 'advantage' = ventaja tradicional
         let serve = 1;
         let history = [];
         let matchOver = false;
@@ -496,6 +519,17 @@
             resetMatch();
         }
 
+        function setDeuceMode(m) {
+            deuceMode = m;
+            document.getElementById('deuce-golden').classList.toggle('active', m === 'golden');
+            document.getElementById('deuce-adv').classList.toggle('active', m === 'advantage');
+            resetMatch();
+        }
+
+        function toggleRules() {
+            document.getElementById('rules-card').classList.toggle('d-none');
+        }
+
         function addPoint(player) {
             if (matchOver) return;
             saveState();
@@ -525,9 +559,16 @@
             }
 
             if (points[0] === 3 && points[1] === 3) {
-                if (advantage === 0) { advantage = player; addHistory(`${getName(player)} ventaja`); }
-                else if (advantage === player) { addHistory(`${getName(player)} gana juego`); winGame(player); }
-                else { advantage = 0; addHistory('Iguales'); }
+                if (deuceMode === 'golden') {
+                    // Punto de oro: el siguiente punto gana directo
+                    addHistory(`PUNTO DE ORO - ${getName(player)} gana juego`);
+                    winGame(player);
+                } else {
+                    // Ventaja tradicional
+                    if (advantage === 0) { advantage = player; addHistory(`${getName(player)} ventaja`); }
+                    else if (advantage === player) { addHistory(`${getName(player)} gana juego`); winGame(player); }
+                    else { advantage = 0; addHistory('Iguales'); }
+                }
                 return;
             }
             if (advantage === player) { addHistory(`${getName(player)} gana juego`); winGame(player); return; }
@@ -574,7 +615,7 @@
                 points: [...points], games: [...games],
                 sets: [sets[0].slice(), sets[1].slice()],
                 setsWon: [...setsWon], tiebreak, advantage, serve,
-                matchOver, freePoints: [...freePoints], mode
+                matchOver, freePoints: [...freePoints], mode, deuceMode
             });
         }
 
@@ -661,7 +702,7 @@
         // ── Persistencia ──
         function saveToStorage() {
             const data = {
-                mode, setsToWin, gamesPerSet, serve, matchOver,
+                mode, setsToWin, gamesPerSet, deuceMode, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage,
                 freePoints,
                 names: [
@@ -681,6 +722,7 @@
                 mode = d.mode || 'padel';
                 setsToWin = d.setsToWin || 2;
                 gamesPerSet = d.gamesPerSet || 6;
+                deuceMode = d.deuceMode || 'golden';
                 serve = d.serve || 1;
                 matchOver = d.matchOver || false;
                 points = d.points || [0, 0];
@@ -707,6 +749,8 @@
                 });
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
+                document.getElementById('deuce-golden').classList.toggle('active', deuceMode === 'golden');
+                document.getElementById('deuce-adv').classList.toggle('active', deuceMode === 'advantage');
             } catch(e) {}
         }
 
