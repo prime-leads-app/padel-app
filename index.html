@@ -485,9 +485,9 @@
                 </div>
                 <div class="card-header-row">
                     <span class="serve-indicator d-none" id="serve-p1"></span>
-                    <input type="text" class="player-name" value="Jugador 1" id="name-p1a" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <input type="text" class="player-name" value="Jugador 1" id="name-p1a" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
                     <span style="opacity:0.4; margin:0 2px;">/</span>
-                    <input type="text" class="player-name" value="Jugador 2" id="name-p1b" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <input type="text" class="player-name" value="Jugador 2" id="name-p1b" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
                 </div>
                 <div class="card-body-row">
                     <div class="card-info">
@@ -522,9 +522,9 @@
                 </div>
                 <div class="card-header-row">
                     <span class="serve-indicator d-none" id="serve-p2"></span>
-                    <input type="text" class="player-name" value="Jugador 3" id="name-p2a" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <input type="text" class="player-name" value="Jugador 3" id="name-p2a" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
                     <span style="opacity:0.4; margin:0 2px;">/</span>
-                    <input type="text" class="player-name" value="Jugador 4" id="name-p2b" maxlength="12" onchange="saveToStorage()" onblur="saveToStorage()">
+                    <input type="text" class="player-name" value="Jugador 4" id="name-p2b" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
                 </div>
                 <div class="card-body-row">
                     <div class="card-info">
@@ -1039,6 +1039,11 @@
             document.getElementById('winner-text-p' + p).textContent = `${getName(p)} gana!`;
             document.getElementById('winner-score-p' + p).textContent = scoreText;
             document.getElementById('winner-badge-p' + p).classList.add('show');
+        }
+
+        function onNameChange() {
+            if (mode === 'padel') renderSetsTable();
+            saveToStorage();
         }
 
         // ── Persistencia ──
