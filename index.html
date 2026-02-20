@@ -353,19 +353,17 @@
         </div>
 
         <!-- Rules -->
-        <div class="card bg-dark border-secondary d-none" id="rules-card" style="font-size:0.75rem;">
-            <div class="card-body p-2">
-                <strong>Reglas de puntuacion:</strong>
-                <ul class="mb-1 ps-3">
-                    <li><b>Puntos:</b> 0 → 15 → 30 → 40 → Juego</li>
-                    <li><b>40-40 Punto de Oro:</b> El siguiente punto gana el juego. Sin ventajas. (Regla WPT/Premier Padel)</li>
-                    <li><b>40-40 Ventaja:</b> Necesitas 2 puntos seguidos para ganar (ventaja + juego). Sistema tradicional.</li>
-                    <li><b>Set:</b> Gana el primero en llegar a 6 (o 4) juegos con 2 de diferencia.</li>
-                    <li><b>Tie-break:</b> A 6-6 juegos se juega tie-break (primero a 7 puntos, con 2 de diferencia).</li>
-                    <li><b>Partido:</b> Gana el que llegue primero al numero de sets configurado.</li>
-                </ul>
-                <button class="btn btn-outline-secondary btn-sm py-0 w-100" onclick="toggleRules()">Cerrar</button>
-            </div>
+        <div class="d-none" id="rules-card" style="background:#2c2c54; color:#fff; border-radius:10px; padding:10px; font-size:0.85rem; margin-top:6px;">
+            <strong style="font-size:1rem;">Reglas de puntuacion</strong>
+            <ul style="padding-left:18px; margin:8px 0;">
+                <li><b>Puntos:</b> 0, 15, 30, 40, Juego</li>
+                <li><b>40-40 Punto de Oro:</b> El siguiente punto gana el juego. Sin ventajas. Regla oficial WPT / Premier Padel.</li>
+                <li><b>40-40 Ventaja:</b> Necesitas 2 puntos seguidos para ganar (ventaja + juego). Sistema tradicional.</li>
+                <li><b>Set:</b> Gana el primero en llegar a 6 (o 4) juegos con 2 de diferencia.</li>
+                <li><b>Tie-break:</b> A 6-6 juegos se juega tie-break. Primero a 7 puntos con 2 de diferencia.</li>
+                <li><b>Partido:</b> Gana el que llegue al numero de sets configurado.</li>
+            </ul>
+            <button class="btn btn-outline-light btn-sm w-100" onclick="toggleRules()">Cerrar</button>
         </div>
 
         <!-- Scoreboard -->
