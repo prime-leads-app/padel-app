@@ -18,8 +18,8 @@
 
 ## Fase 4: Historial de partidos
 
-- [ ] 4.1 Guardar partidos terminados con fecha, resultado, nombres y modo
-- [ ] 4.2 Vista de historial de partidos (lista de partidos anteriores)
+- [x] 4.1 Guardar partidos terminados con fecha, resultado, nombres y modo
+- [x] 4.2 Vista de historial de partidos (lista de partidos anteriores)
 
 ## Fase 5: Mejoras visuales
 
