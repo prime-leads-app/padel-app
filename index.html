@@ -388,17 +388,32 @@
         <!-- Config -->
         <div id="padel-config">
             <div class="config-row">
-                <small style="color:#FFD54F; font-weight:600;">Sets:</small>
+                <small style="color:#FFD54F; font-weight:600;">Formato:</small>
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(1)" id="sets-1">1</button>
-                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
-                    <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setPadelFormat('normal')" id="fmt-normal">Normal</button>
+                    <button class="btn btn-outline-light py-0 px-1" onclick="setPadelFormat('retas')" id="fmt-retas">Retas</button>
                 </div>
-                <small style="color:#FFD54F; font-weight:600;">Juegos:</small>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
-                    <button class="btn btn-outline-light py-0 px-1" onclick="setGamesPerSet(4)" id="gps-4">4</button>
-                </div>
+                <span id="config-normal">
+                    <small style="color:#FFD54F; font-weight:600;">Sets:</small>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(1)" id="sets-1">1</button>
+                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                    </div>
+                    <small style="color:#FFD54F; font-weight:600;">Juegos:</small>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setGamesPerSet(4)" id="gps-4">4</button>
+                    </div>
+                </span>
+                <span id="config-retas" class="d-none">
+                    <small style="color:#FFD54F; font-weight:600;">Juegos:</small>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(4)" id="rg-4">4</button>
+                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasGames(6)" id="rg-6">6</button>
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(8)" id="rg-8">8</button>
+                    </div>
+                </span>
                 <small style="color:#FFD54F; font-weight:600;">40-40:</small>
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-light py-0 px-1 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
@@ -650,8 +665,10 @@
         const PADEL_POINTS = ['0', '15', '30', '40'];
         let mode = 'padel';
         let nameMode = 'players'; // 'players' o 'teams'
+        let padelFormat = 'normal'; // 'normal' o 'retas'
         let setsToWin = 2;
         let gamesPerSet = 6;
+        let retasGames = 6;
         let deuceMode = 'golden'; // 'golden' = punto de oro, 'advantage' = ventaja tradicional
         let serve = 1;
         let history = [];
@@ -740,6 +757,27 @@
                 gamesPerSet = n;
                 document.getElementById('gps-6').classList.toggle('active', n === 6);
                 document.getElementById('gps-4').classList.toggle('active', n === 4);
+                resetMatch();
+            });
+        }
+
+        function setPadelFormat(f) {
+            confirmConfigChange(() => {
+                padelFormat = f;
+                document.getElementById('fmt-normal').classList.toggle('active', f === 'normal');
+                document.getElementById('fmt-retas').classList.toggle('active', f === 'retas');
+                document.getElementById('config-normal').classList.toggle('d-none', f === 'retas');
+                document.getElementById('config-retas').classList.toggle('d-none', f === 'normal');
+                resetMatch();
+            });
+        }
+
+        function setRetasGames(n) {
+            confirmConfigChange(() => {
+                retasGames = n;
+                document.getElementById('rg-4').classList.toggle('active', n === 4);
+                document.getElementById('rg-6').classList.toggle('active', n === 6);
+                document.getElementById('rg-8').classList.toggle('active', n === 8);
                 resetMatch();
             });
         }
@@ -923,6 +961,19 @@
             const wasTB = tiebreak; tiebreak = false;
             serve = serve === 1 ? 2 : 1; updateServeUI();
 
+            if (padelFormat === 'retas') {
+                const half = retasGames / 2;
+                if (games[p] > half) {
+                    // Ganó la mayoría
+                    matchOver = true;
+                    addHistory(`${getName(player)} GANA ${games[0]}-${games[1]}`);
+                    showWinner(player);
+                } else if (games[0] === half && games[1] === half) {
+                    addHistory('Desempate!');
+                }
+                return;
+            }
+
             if (games[p] >= gamesPerSet && games[p] - games[o] >= 2) { winSet(player); return; }
             if (games[0] === gamesPerSet && games[1] === gamesPerSet) { tiebreak = true; addHistory('Tie-break!'); }
             if (wasTB && games[p] === gamesPerSet + 1) winSet(player);
@@ -1037,10 +1088,24 @@
         }
 
         function renderSetsTable() {
-            const maxSets = setsToWin * 2 - 1; // best of: 1→1, 2→3, 3→5
             const thead = document.querySelector('#sets-table thead tr');
             const row1 = document.getElementById('sets-row-p1');
             const row2 = document.getElementById('sets-row-p2');
+
+            if (padelFormat === 'retas') {
+                thead.innerHTML = '<th></th><th>Juegos</th><th>PTS</th>';
+                for (let p = 0; p < 2; p++) {
+                    const row = p === 0 ? row1 : row2;
+                    const shortName = getShortName(p + 1);
+                    row.innerHTML = `<td class="team-name-cell">${shortName}</td>` +
+                        `<td class="current-set">${games[p]}</td>` +
+                        `<td class="current-set">${getPointDisplay(p)}</td>`;
+                    row.className = p === 0 ? 'team1-row' : 'team2-row';
+                }
+                return;
+            }
+
+            const maxSets = setsToWin * 2 - 1;
 
             // Header: nombre vacío + S1, S2... + PTS
             let hHtml = '<th></th>';
@@ -1058,17 +1123,14 @@
                     const isCurrent = i === sets[p].length;
                     const cls = isCurrent ? ' class="current-set"' : '';
                     if (i < sets[p].length) {
-                        // Set terminado
                         rHtml += `<td${cls}>${sets[p][i]}</td>`;
                     } else if (isCurrent && !matchOver) {
-                        // Set actual
                         rHtml += `<td${cls}>${games[p]}</td>`;
                     } else {
                         rHtml += `<td${cls}>-</td>`;
                     }
                 }
 
-                // Puntos del juego actual
                 rHtml += `<td class="current-set">${getPointDisplay(p)}</td>`;
                 row.innerHTML = rHtml;
                 row.className = p === 0 ? 'team1-row' : 'team2-row';
@@ -1167,7 +1229,7 @@
         function saveToStorage() {
             const prev = JSON.parse(localStorage.getItem('padel-state') || '{}');
             const data = {
-                mode, nameMode, setsToWin, gamesPerSet, deuceMode, serve, matchOver,
+                mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, deuceMode, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage,
                 freePoints,
                 namesPadel: mode === 'padel' ? getCurrentNames() : (prev.namesPadel || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
@@ -1188,8 +1250,10 @@
             try {
                 const d = JSON.parse(raw);
                 mode = d.mode || 'padel';
+                padelFormat = d.padelFormat || 'normal';
                 setsToWin = d.setsToWin || 2;
                 gamesPerSet = d.gamesPerSet || 6;
+                retasGames = d.retasGames || 6;
                 deuceMode = d.deuceMode || 'golden';
                 serve = d.serve || 1;
                 matchOver = d.matchOver || false;
@@ -1222,8 +1286,15 @@
                     if (b.id.startsWith('sets-p')) return;
                     b.classList.toggle('active', b.id === 'sets-' + setsToWin);
                 });
+                document.getElementById('fmt-normal').classList.toggle('active', padelFormat === 'normal');
+                document.getElementById('fmt-retas').classList.toggle('active', padelFormat === 'retas');
+                document.getElementById('config-normal').classList.toggle('d-none', padelFormat === 'retas');
+                document.getElementById('config-retas').classList.toggle('d-none', padelFormat === 'normal');
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
+                document.getElementById('rg-4').classList.toggle('active', retasGames === 4);
+                document.getElementById('rg-6').classList.toggle('active', retasGames === 6);
+                document.getElementById('rg-8').classList.toggle('active', retasGames === 8);
                 document.getElementById('deuce-golden').classList.toggle('active', deuceMode === 'golden');
                 document.getElementById('deuce-adv').classList.toggle('active', deuceMode === 'advantage');
             } catch(e) {}
