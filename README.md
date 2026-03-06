@@ -68,6 +68,24 @@ Accesible desde el menú hamburguesa > Configuración:
 | Fin | Todos / Anticipado | Jugar todos los juegos o terminar con mayoría (solo Retas) |
 | 40-40 | Oro / Ventaja | Qué pasa en empate a 40 |
 
+## Instalar en el celular
+
+La app se puede agregar a la pantalla de inicio y funciona como una app nativa.
+
+**iPhone (Safari):**
+1. Abre la app en Safari
+2. Toca el botón de compartir (icono de cuadro con flecha hacia arriba)
+3. Selecciona "Agregar a pantalla de inicio"
+4. Toca "Agregar"
+
+**Android (Chrome):**
+1. Abre la app en Chrome
+2. Toca el menú de tres puntos (esquina superior derecha)
+3. Selecciona "Agregar a pantalla de inicio" o "Instalar app"
+4. Confirma la instalación
+
+Una vez instalada, se abre sin barra de navegador y funciona sin conexión a internet.
+
 ## Tecnología
 
 - HTML, CSS, JavaScript (vanilla, sin frameworks)
