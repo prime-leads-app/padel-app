@@ -887,9 +887,9 @@
             if (mode === 'free') {
                 txt = 'Libre · 30 pts';
             } else if (padelFormat === 'normal') {
-                txt = 'Formato: Normal · Sets: ' + setsToWin + ' · Juegos: ' + gamesPerSet + ' · 40-40: ' + (deuceMode === 'golden' ? 'Oro' : 'Ventaja');
+                txt = 'Normal · Sets: ' + setsToWin + ' · Juegos: ' + gamesPerSet + ' · 40-40: ' + (deuceMode === 'golden' ? 'Oro' : 'Ventaja');
             } else {
-                txt = 'Formato: Retas · Juegos: ' + retasGames + ' · Fin: ' + (retasEarlyWin ? 'Anticipado' : 'Todos') + ' · 40-40: ' + (deuceMode === 'golden' ? 'Oro' : 'Ventaja');
+                txt = 'Retas · Juegos: ' + retasGames + ' · Fin: ' + (retasEarlyWin ? 'Anticipado' : 'Todos') + ' · 40-40: ' + (deuceMode === 'golden' ? 'Oro' : 'Ventaja');
             }
             document.getElementById('config-summary').textContent = txt;
         }
