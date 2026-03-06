@@ -86,6 +86,8 @@ La app se puede agregar a la pantalla de inicio y funciona como una app nativa.
 
 Una vez instalada, se abre sin barra de navegador y funciona sin conexión a internet.
 
+**¿Se actualiza sola?** Sí. Cuando se publica una nueva versión, la app se actualiza automáticamente la próxima vez que la abras (requiere conexión a internet en ese momento). No es necesario reinstalarla.
+
 ## Tecnología
 
 - HTML, CSS, JavaScript (vanilla, sin frameworks)

@@ -373,10 +373,10 @@
 <body>
     <div class="app-wrapper">
         <!-- Header -->
-        <div class="header" style="display:flex; align-items:center; justify-content:center;">
-            <div style="position:relative;">
+        <div class="header" style="display:flex; align-items:center; justify-content:flex-start; gap:8px;">
+            <div style="position:relative; flex-shrink:0;">
                 <button class="btn btn-outline-light btn-sm" onclick="toggleHamburger()" id="hamburger-btn" style="font-size:1.2rem; line-height:1; padding:2px 6px;">☰</button>
-                <div class="d-none" id="hamburger-menu" style="position:absolute; left:50%; transform:translateX(-50%); top:100%; margin-top:4px; background:#2c2c54; border:1px solid #555; border-radius:8px; min-width:220px; z-index:999; overflow:hidden;">
+                <div class="d-none" id="hamburger-menu" style="position:absolute; left:0; top:100%; margin-top:4px; background:#2c2c54; border:1px solid #555; border-radius:8px; min-width:220px; z-index:999; overflow:hidden;">
                     <div onclick="toggleHamburger(); toggleAllConfig()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Configuración <span>⚙️</span></div>
                     <div onclick="toggleHamburger(); toggleConfigHelp()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Ayuda opciones <span>❓</span></div>
                     <div onclick="toggleHamburger(); showRules('padel')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar pádel <span>🎾</span></div>
@@ -385,6 +385,7 @@
                     <div onclick="toggleHamburger(); showHistoryModal()" style="padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">Historial <span>📋</span></div>
                 </div>
             </div>
+            <span id="config-summary" style="font-size:0.7rem; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></span>
         </div>
 
         <!-- Config (all options, toggled via hamburger) -->
@@ -764,6 +765,7 @@
         loadFromStorage();
         render();
         updateServeUI();
+        updateConfigSummary();
 
         function setMode(m) {
             // Guardar estado del modo actual antes de cambiar
@@ -784,6 +786,7 @@
             document.getElementById('btn-free').classList.toggle('active', m === 'free');
             document.getElementById('padel-config').classList.toggle('d-none', m === 'free');
             render();
+            updateConfigSummary();
         }
 
         function setNameMode(m) {
@@ -877,6 +880,18 @@
                 document.getElementById('deuce-adv').classList.toggle('active', m === 'advantage');
                 resetMatch();
             });
+        }
+
+        function updateConfigSummary() {
+            let txt = '';
+            if (mode === 'free') {
+                txt = 'Libre · 30 pts';
+            } else if (padelFormat === 'normal') {
+                txt = 'Formato: Normal · Sets: ' + setsToWin + ' · Juegos: ' + gamesPerSet + ' · 40-40: ' + (deuceMode === 'golden' ? 'Oro' : 'Ventaja');
+            } else {
+                txt = 'Formato: Retas · Juegos: ' + retasGames + ' · Fin: ' + (retasEarlyWin ? 'Anticipado' : 'Todos') + ' · 40-40: ' + (deuceMode === 'golden' ? 'Oro' : 'Ventaja');
+            }
+            document.getElementById('config-summary').textContent = txt;
         }
 
         function showRules(type) {
@@ -1472,6 +1487,7 @@
             hideWinnerCard();
             lastPointTime = 0;
             render();
+            updateConfigSummary();
         }
 
         function confirmClear() {
