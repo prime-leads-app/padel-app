@@ -382,7 +382,16 @@
                 <button class="btn btn-outline-light mode-btn active" onclick="setNameMode('players')" id="btn-players">Jugadores</button>
                 <button class="btn btn-outline-light mode-btn" onclick="setNameMode('teams')" id="btn-teams">Equipos</button>
             </div>
-            <button class="btn btn-outline-light btn-sm mode-btn" onclick="showHistoryModal()">Historial</button>
+            <div style="position:relative;">
+                <button class="btn btn-outline-light btn-sm" onclick="toggleHamburger()" id="hamburger-btn" style="font-size:1.2rem; line-height:1; padding:2px 6px;">☰</button>
+                <div class="d-none" id="hamburger-menu" style="position:absolute; right:0; top:100%; margin-top:4px; background:#2c2c54; border:1px solid #555; border-radius:8px; min-width:220px; z-index:999; overflow:hidden;">
+                    <div onclick="toggleHamburger(); showHistoryModal()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Historial <span>📋</span></div>
+                    <div onclick="toggleHamburger(); toggleConfigHelp()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Configuración <span>⚙️</span></div>
+                    <div onclick="toggleHamburger(); showRules('padel')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar pádel <span>🎾</span></div>
+                    <div onclick="toggleHamburger(); showRules('retas')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar retas <span>🏆</span></div>
+                    <div onclick="toggleHamburger(); showRules('libre')" style="padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">Cómo jugar libre <span>🎯</span></div>
+                </div>
+            </div>
         </div>
 
         <!-- Config -->
@@ -413,19 +422,22 @@
                         <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasGames(6)" id="rg-6">6</button>
                         <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(8)" id="rg-8">8</button>
                     </div>
+                    <small style="color:#FFD54F; font-weight:600;">Fin:</small>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasEarlyWin(false)" id="rew-all">Todos</button>
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setRetasEarlyWin(true)" id="rew-early">Anticipado</button>
+                    </div>
                 </span>
                 <small style="color:#FFD54F; font-weight:600;">40-40:</small>
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-outline-light py-0 px-1 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
                     <button class="btn btn-outline-light py-0 px-1" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
                 </div>
-                <button class="btn btn-outline-secondary btn-sm py-0 px-2" onclick="toggleConfigHelp()">⚙</button>
-                <button class="btn btn-outline-secondary btn-sm py-0 px-2" onclick="toggleRules()">?</button>
             </div>
         </div>
 
-        <!-- Config Help -->
-        <div class="d-none" id="config-help-card" style="background:#2c2c54; color:#fff; border-radius:10px; padding:12px; font-size:0.85rem; margin-top:6px; line-height:1.5;">
+        <!-- Config Help (hidden template) -->
+        <div class="d-none" id="config-help-card">
             <strong style="font-size:1rem;">Que significan las opciones de configuracion</strong>
 
             <div style="margin:8px 0;">
@@ -457,50 +469,90 @@
                 <span style="opacity:0.7;">Ej: Van 40-40, anotas = tienes ventaja. Si anotas de nuevo = ganas. Si el otro anota = regresan a 40-40 y a empezar de nuevo.</span>
             </div>
 
-            <button class="btn btn-outline-light btn-sm w-100" onclick="toggleConfigHelp()" style="margin-top:6px;">Cerrar</button>
         </div>
 
         <!-- Rules -->
-        <div class="d-none" id="rules-card" style="background:#2c2c54; color:#fff; border-radius:10px; padding:12px; font-size:0.85rem; margin-top:6px; line-height:1.5;">
-            <strong style="font-size:1rem;">Como se cuenta en padel</strong>
+        <!-- Rules templates (hidden, used as content source) -->
+        <div class="d-none" id="rules-padel">
+            <strong style="font-size:1rem;">🎾 Cómo jugar pádel</strong>
 
             <div style="margin:8px 0;">
                 <b style="color:#FFD54F;">1. Puntos dentro de un juego</b><br>
-                Cada punto que anotas sube asi: <b>0 &rarr; 15 &rarr; 30 &rarr; 40</b><br>
+                Cada punto sube asi: <b>0 → 15 → 30 → 40</b><br>
                 Si tienes 40 y anotas otro punto, ganas el juego.<br>
-                <span style="opacity:0.7;">Ej: Vas 40-30, anotas punto = ganas el juego.</span>
+                <span style="opacity:0.7;">Ej: Vas 40-30, anotas = ganas el juego.</span>
             </div>
 
             <div style="margin:8px 0;">
-                <b style="color:#FFD54F;">2. Empate a 40 (Deuce / Iguales)</b><br>
-                Si los dos llegan a 40-40, depende del modo:<br>
-                <b>Punto de Oro:</b> Un solo punto decide. El que anote gana el juego. Asi se juega en torneos profesionales (WPT).<br>
-                <b>Ventaja:</b> Tienes que anotar 2 puntos seguidos. El primero te da "ventaja", el segundo te da el juego. Si el otro anota, regresan a iguales.<br>
-                <span style="opacity:0.7;">Ej con Oro: Van 40-40, tu anotas = ganas el juego.</span><br>
-                <span style="opacity:0.7;">Ej con Ventaja: Van 40-40, tu anotas = "ventaja". Anotas de nuevo = ganas. Pero si el otro anota = regresan a 40-40.</span>
+                <b style="color:#FFD54F;">2. Empate a 40 (Deuce)</b><br>
+                <b>Punto de Oro:</b> Un solo punto decide.<br>
+                <b>Ventaja:</b> Necesitas 2 puntos seguidos para ganar el juego.
             </div>
 
             <div style="margin:8px 0;">
                 <b style="color:#FFD54F;">3. Juegos dentro de un set</b><br>
-                Necesitas ganar <b>6 juegos</b> para ganar un set, pero con 2 de ventaja.<br>
-                <span style="opacity:0.7;">Ej: Si vas 6-4 en juegos, ganaste el set.</span><br>
-                <span style="opacity:0.7;">Ej: Si van 6-5, todavia no ganas. Necesitas 7-5.</span>
+                Necesitas ganar <b>6 juegos</b> (o 4 si asi lo configuras) con 2 de ventaja.<br>
+                Si empatan (6-6 o 4-4), se juega un <b>tie-break</b> a 7 puntos.
             </div>
 
             <div style="margin:8px 0;">
-                <b style="color:#FFD54F;">4. Tie-break (desempate)</b><br>
-                Si empatan a 6-6 juegos, se juega un tie-break. Aqui los puntos van 1, 2, 3... (no 15, 30, 40). Gana el primero en llegar a <b>7 puntos</b> con 2 de ventaja.<br>
-                <span style="opacity:0.7;">Ej: 7-5 en tie-break = ganas el set.</span><br>
-                <span style="opacity:0.7;">Ej: 7-6 no vale, siguen hasta que alguien saque 2 de ventaja (8-6, 9-7, etc).</span>
+                <b style="color:#FFD54F;">4. Partido completo</b><br>
+                Gana el primero en ganar el numero de sets configurado (1, 2 o 3).<br>
+                <span style="opacity:0.7;">Ej: Con "Sets: 2", gana el primero en ganar 2 sets (al mejor de 3).</span>
+            </div>
+
+        </div>
+
+        <div class="d-none" id="rules-retas">
+            <strong style="font-size:1rem;">🏆 Cómo jugar retas</strong>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">1. Formato</b><br>
+                Se juega un numero fijo de juegos: <b>4, 6 u 8</b>.<br>
+                No hay sets. Gana el equipo que gane la mayoria de juegos.
             </div>
 
             <div style="margin:8px 0;">
-                <b style="color:#FFD54F;">5. Partido completo</b><br>
-                Gana el que llegue al numero de sets configurado arriba (1, 2 o 3).<br>
-                <span style="opacity:0.7;">Ej: Con "Sets: 2", el primero en ganar 2 sets gana el partido (al mejor de 3).</span>
+                <b style="color:#FFD54F;">2. Puntos dentro de cada juego</b><br>
+                Igual que en padel: <b>0 → 15 → 30 → 40 → gana juego</b>.<br>
+                Si empatan a 40, aplica Punto de Oro o Ventaja segun la config.
             </div>
 
-            <button class="btn btn-outline-light btn-sm w-100" onclick="toggleRules()" style="margin-top:6px;">Cerrar</button>
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">3. Desempate</b><br>
+                Si empatan en juegos (ej: 3-3 en reta de 6), se juega un juego de desempate.<br>
+                <span style="opacity:0.7;">Ej: Reta de 6, van 3-3 → juegan uno mas, gana 4-3.</span>
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">4. Fin del partido (configurable)</b><br>
+                <b>Todos:</b> Se juegan todos los juegos. Al final, gana quien tenga mas.<br>
+                <span style="opacity:0.7;">Ej: Reta de 6, van 4-1 pero se juega el 6to juego. Resultado final: 5-1.</span><br>
+                <b>Anticipado:</b> Termina cuando un equipo ya tiene mayoria y no puede ser alcanzado.<br>
+                <span style="opacity:0.7;">Ej: Reta de 6, un equipo llega a 4 → ya gano, no se juegan los restantes.</span>
+            </div>
+
+        </div>
+
+        <div class="d-none" id="rules-libre">
+            <strong style="font-size:1rem;">🎯 Cómo jugar libre</strong>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">1. Formato</b><br>
+                Modo libre sin reglas de padel. Cada toque en la tarjeta suma <b>1 punto</b>.
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">2. Victoria</b><br>
+                El primer equipo en llegar a <b>30 puntos</b> gana el partido.
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">3. Uso</b><br>
+                Ideal para llevar el marcador de cualquier juego o actividad que no sea padel.<br>
+                <span style="opacity:0.7;">Los nombres de jugadores son independientes del modo padel.</span>
+            </div>
+
         </div>
 
         <!-- Scoreboard -->
@@ -601,6 +653,14 @@
         </div>
     </div>
 
+    <!-- Info Modal (rules/config help) -->
+    <div class="winner-overlay d-none" id="info-modal" onclick="if(event.target===this)closeInfoModal()">
+        <div class="winner-card" style="background: linear-gradient(135deg, #2c3e50, #1a1a2e); max-height:80vh; display:flex; flex-direction:column; text-align:left; font-size:0.85rem; line-height:1.5;">
+            <div style="overflow-y:auto; flex:1;" id="info-modal-content"></div>
+            <button class="btn btn-outline-light btn-sm mt-3" onclick="closeInfoModal()">Cerrar</button>
+        </div>
+    </div>
+
     <!-- History Modal -->
     <div class="winner-overlay d-none" id="history-modal" onclick="if(event.target===this)closeHistoryModal()">
         <div class="winner-card" style="background: linear-gradient(135deg, #2c3e50, #1a1a2e); max-height:70vh; display:flex; flex-direction:column;">
@@ -669,6 +729,7 @@
         let setsToWin = 2;
         let gamesPerSet = 6;
         let retasGames = 6;
+        let retasEarlyWin = false; // true = termina al tener mayoría, false = jugar todos
         let deuceMode = 'golden'; // 'golden' = punto de oro, 'advantage' = ventaja tradicional
         let serve = 1;
         let history = [];
@@ -782,6 +843,15 @@
             });
         }
 
+        function setRetasEarlyWin(v) {
+            confirmConfigChange(() => {
+                retasEarlyWin = v;
+                document.getElementById('rew-all').classList.toggle('active', !v);
+                document.getElementById('rew-early').classList.toggle('active', v);
+                resetMatch();
+            });
+        }
+
         function setDeuceMode(m) {
             confirmConfigChange(() => {
                 deuceMode = m;
@@ -791,14 +861,24 @@
             });
         }
 
+        function showRules(type) {
+            const content = document.getElementById('rules-' + type).innerHTML;
+            document.getElementById('info-modal-content').innerHTML = content;
+            document.getElementById('info-modal').classList.remove('d-none');
+        }
+
         function toggleRules() {
-            document.getElementById('rules-card').classList.toggle('d-none');
-            document.getElementById('config-help-card').classList.add('d-none');
+            showRules('padel');
         }
 
         function toggleConfigHelp() {
-            document.getElementById('config-help-card').classList.toggle('d-none');
-            document.getElementById('rules-card').classList.add('d-none');
+            const content = document.getElementById('config-help-card').innerHTML;
+            document.getElementById('info-modal-content').innerHTML = content;
+            document.getElementById('info-modal').classList.remove('d-none');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('d-none');
         }
 
         // ── Sonidos ──
@@ -963,13 +1043,36 @@
 
             if (padelFormat === 'retas') {
                 const half = retasGames / 2;
-                if (games[p] > half) {
-                    // Ganó la mayoría
-                    matchOver = true;
-                    addHistory(`${getName(player)} GANA ${games[0]}-${games[1]}`);
-                    showWinner(player);
-                } else if (games[0] === half && games[1] === half) {
-                    addHistory('Desempate!');
+                const total = games[0] + games[1];
+                if (retasEarlyWin) {
+                    // Termina cuando un equipo tiene mayoría
+                    if (games[p] > half) {
+                        matchOver = true;
+                        addHistory(`${getName(player)} GANA ${games[0]}-${games[1]}`);
+                        showWinner(player);
+                    } else if (games[0] === half && games[1] === half) {
+                        addHistory('Desempate!');
+                    }
+                } else {
+                    // Se juegan todos los juegos
+                    if (total >= retasGames) {
+                        if (games[0] !== games[1]) {
+                            const winner = games[0] > games[1] ? 1 : 2;
+                            matchOver = true;
+                            addHistory(`${getName(winner)} GANA ${games[0]}-${games[1]}`);
+                            showWinner(winner);
+                        } else {
+                            // Empate → desempate
+                            addHistory('Desempate!');
+                        }
+                    }
+                    // Desempate jugado
+                    if (total === retasGames + 1) {
+                        const winner = games[0] > games[1] ? 1 : 2;
+                        matchOver = true;
+                        addHistory(`${getName(winner)} GANA ${games[0]}-${games[1]}`);
+                        showWinner(winner);
+                    }
                 }
                 return;
             }
@@ -1146,6 +1249,18 @@
             list.insertBefore(div, list.firstChild);
         }
 
+        function toggleHamburger() {
+            document.getElementById('hamburger-menu').classList.toggle('d-none');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('hamburger-menu');
+            const btn = document.getElementById('hamburger-btn');
+            if (!menu.classList.contains('d-none') && !menu.contains(e.target) && e.target !== btn) {
+                menu.classList.add('d-none');
+            }
+        });
+
         function showHistoryModal() {
             const list = document.getElementById('history-list');
             const empty = document.getElementById('history-empty');
@@ -1229,7 +1344,7 @@
         function saveToStorage() {
             const prev = JSON.parse(localStorage.getItem('padel-state') || '{}');
             const data = {
-                mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, deuceMode, serve, matchOver,
+                mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, retasEarlyWin, deuceMode, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage,
                 freePoints,
                 namesPadel: mode === 'padel' ? getCurrentNames() : (prev.namesPadel || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
@@ -1254,6 +1369,7 @@
                 setsToWin = d.setsToWin || 2;
                 gamesPerSet = d.gamesPerSet || 6;
                 retasGames = d.retasGames || 6;
+                retasEarlyWin = d.retasEarlyWin || false;
                 deuceMode = d.deuceMode || 'golden';
                 serve = d.serve || 1;
                 matchOver = d.matchOver || false;
@@ -1295,6 +1411,8 @@
                 document.getElementById('rg-4').classList.toggle('active', retasGames === 4);
                 document.getElementById('rg-6').classList.toggle('active', retasGames === 6);
                 document.getElementById('rg-8').classList.toggle('active', retasGames === 8);
+                document.getElementById('rew-all').classList.toggle('active', !retasEarlyWin);
+                document.getElementById('rew-early').classList.toggle('active', retasEarlyWin);
                 document.getElementById('deuce-golden').classList.toggle('active', deuceMode === 'golden');
                 document.getElementById('deuce-adv').classList.toggle('active', deuceMode === 'advantage');
             } catch(e) {}
