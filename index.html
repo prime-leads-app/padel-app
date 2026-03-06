@@ -396,42 +396,54 @@
 
         <!-- Config -->
         <div id="padel-config">
-            <div class="config-row">
-                <small style="color:#FFD54F; font-weight:600;">Formato:</small>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setPadelFormat('normal')" id="fmt-normal">Normal</button>
-                    <button class="btn btn-outline-light py-0 px-1" onclick="setPadelFormat('retas')" id="fmt-retas">Retas</button>
+            <div class="config-row" style="display:flex; justify-content:center; gap:8px; font-size:0.75rem;">
+                <div style="text-align:center;">
+                    <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Formato</small>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setPadelFormat('normal')" id="fmt-normal">Normal</button>
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setPadelFormat('retas')" id="fmt-retas">Retas</button>
+                    </div>
                 </div>
-                <span id="config-normal">
-                    <small style="color:#FFD54F; font-weight:600;">Sets:</small>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(1)" id="sets-1">1</button>
-                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                <span id="config-normal" style="display:flex; gap:8px;">
+                    <div style="text-align:center;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Sets</small>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(1)" id="sets-1">1</button>
+                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
+                            <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                        </div>
                     </div>
-                    <small style="color:#FFD54F; font-weight:600;">Juegos:</small>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setGamesPerSet(4)" id="gps-4">4</button>
-                    </div>
-                </span>
-                <span id="config-retas" class="d-none">
-                    <small style="color:#FFD54F; font-weight:600;">Juegos:</small>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(4)" id="rg-4">4</button>
-                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasGames(6)" id="rg-6">6</button>
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(8)" id="rg-8">8</button>
-                    </div>
-                    <small style="color:#FFD54F; font-weight:600;">Fin:</small>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasEarlyWin(false)" id="rew-all">Todos</button>
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setRetasEarlyWin(true)" id="rew-early">Anticipado</button>
+                    <div style="text-align:center;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Juegos</small>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
+                            <button class="btn btn-outline-light py-0 px-1" onclick="setGamesPerSet(4)" id="gps-4">4</button>
+                        </div>
                     </div>
                 </span>
-                <small style="color:#FFD54F; font-weight:600;">40-40:</small>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-outline-light py-0 px-1 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
-                    <button class="btn btn-outline-light py-0 px-1" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
+                <span id="config-retas" style="display:none; gap:8px;">
+                    <div style="text-align:center;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Juegos</small>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(4)" id="rg-4">4</button>
+                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasGames(6)" id="rg-6">6</button>
+                            <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(8)" id="rg-8">8</button>
+                        </div>
+                    </div>
+                    <div style="text-align:center;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Fin</small>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasEarlyWin(false)" id="rew-all">Todos</button>
+                            <button class="btn btn-outline-light py-0 px-1" onclick="setRetasEarlyWin(true)" id="rew-early">Anticipado</button>
+                        </div>
+                    </div>
+                </span>
+                <div style="text-align:center;">
+                    <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">40-40</small>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
+                        <button class="btn btn-outline-light py-0 px-1" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -827,8 +839,8 @@
                 padelFormat = f;
                 document.getElementById('fmt-normal').classList.toggle('active', f === 'normal');
                 document.getElementById('fmt-retas').classList.toggle('active', f === 'retas');
-                document.getElementById('config-normal').classList.toggle('d-none', f === 'retas');
-                document.getElementById('config-retas').classList.toggle('d-none', f === 'normal');
+                document.getElementById('config-normal').style.display = f === 'normal' ? 'flex' : 'none';
+                document.getElementById('config-retas').style.display = f === 'retas' ? 'flex' : 'none';
                 resetMatch();
             });
         }
@@ -1404,8 +1416,8 @@
                 });
                 document.getElementById('fmt-normal').classList.toggle('active', padelFormat === 'normal');
                 document.getElementById('fmt-retas').classList.toggle('active', padelFormat === 'retas');
-                document.getElementById('config-normal').classList.toggle('d-none', padelFormat === 'retas');
-                document.getElementById('config-retas').classList.toggle('d-none', padelFormat === 'normal');
+                document.getElementById('config-normal').style.display = padelFormat === 'normal' ? 'flex' : 'none';
+                document.getElementById('config-retas').style.display = padelFormat === 'retas' ? 'flex' : 'none';
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
                 document.getElementById('rg-4').classList.toggle('active', retasGames === 4);
