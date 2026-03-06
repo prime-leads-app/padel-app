@@ -112,7 +112,7 @@
         }
 
         .score-card.serving {
-            box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+            border: 3px solid #ffc107;
         }
 
         .score-card {
@@ -187,9 +187,11 @@
 
         .serve-indicator {
             width: 10px; height: 10px;
+            min-width: 10px;
             border-radius: 50%;
             background: #ffc107;
             display: inline-block;
+            flex-shrink: 0;
             margin-right: 4px;
             animation: pulse 1.5s infinite;
             vertical-align: middle;
@@ -386,6 +388,113 @@
             .header h1 { font-size: 1.4rem; }
         }
 
+        /* ── LANDSCAPE: side by side on mobile ── */
+        @media (max-width: 767px) and (orientation: landscape) {
+            .scoreboard {
+                flex-direction: row;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .score-card {
+                flex: 1;
+            }
+
+            .score-points { font-size: 4rem; }
+            .score-points.free-score { font-size: 5rem; }
+            .player-name { font-size: 0.9rem; }
+
+            .vs-separator { display: none; }
+
+            .controls-bar .btn { font-size: 0.7rem; min-height: 32px; }
+        }
+
+        /* ── LIGHT THEME ── */
+        body.light-theme {
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        .light-theme .header { background: #f0f2f5; }
+
+        .light-theme .score-card.team1 { background: #C62828; }
+        .light-theme .score-card.team2 { background: #1565C0; }
+        .light-theme .score-card.serving { border: 3px solid #ffc107; }
+
+        .light-theme .vs-separator { color: #c62828; }
+        .light-theme .sets-table { background: #fff; border: 1px solid #ddd; }
+        .light-theme .sets-table th { color: #0d47a1; font-weight: 700; }
+        .light-theme .sets-table td { color: #1a1a1a; font-weight: 600; }
+        .light-theme .sets-table .team1-row td.team-name-cell { color: #b71c1c; }
+        .light-theme .sets-table .team2-row td.team-name-cell { color: #0d47a1; }
+        .light-theme .sets-table th, .light-theme .sets-table td { border-color: #ddd; }
+        .light-theme .sets-table td.current-set { background: rgba(198,40,40,0.12); }
+
+        .light-theme .golden-point-badge { color: #000; }
+
+        .light-theme .history-item { background: #fff; color: #1a1a1a; border: 1px solid #ddd; }
+
+        .light-theme .controls-bar .btn {
+            font-weight: 700;
+            border-width: 2px;
+        }
+        .light-theme .controls-bar .btn-outline-warning {
+            background: #e65100; color: #fff; border-color: #e65100;
+        }
+        .light-theme .controls-bar .btn-outline-info {
+            background: #0277bd; color: #fff; border-color: #0277bd;
+        }
+        .light-theme .controls-bar .btn-outline-danger {
+            background: #c62828; color: #fff; border-color: #c62828;
+        }
+        .light-theme .controls-bar .btn-outline-secondary {
+            background: #616161; color: #fff; border-color: #616161;
+        }
+
+        /* Footer cards */
+        .light-theme .card.bg-dark {
+            background: #fff !important;
+            border-color: #ccc !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .light-theme .card .text-white { color: #1a1a1a !important; }
+
+        .light-theme #config-summary { color: #333 !important; font-weight: 600; }
+        .light-theme #match-timer { color: #c62828; }
+
+        /* Hamburger button and menu - !important to override inline styles */
+        .light-theme #hamburger-btn { color: #1a1a1a; border-color: #aaa; border-width: 2px; }
+        .light-theme #hamburger-menu {
+            background: #fff !important;
+            border-color: #ddd !important;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15) !important;
+        }
+        .light-theme #hamburger-menu > div {
+            color: #1a1a1a !important;
+            border-bottom-color: #e0e0e0 !important;
+        }
+        .light-theme #hamburger-menu > div:hover {
+            background: #f0f2f5 !important;
+        }
+
+        /* Config area */
+        .light-theme #all-config {
+            background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .light-theme #all-config .btn-outline-light {
+            color: #333; border-color: #aaa; background: #f5f5f5;
+        }
+        .light-theme #all-config .btn-outline-light:hover {
+            background: #e0e0e0;
+        }
+        .light-theme #all-config .btn-outline-light.active { color: #fff; background: #455a64 !important; border-color: #455a64 !important; }
+        .light-theme .config-row small { color: #0d47a1 !important; font-weight: 700 !important; }
+
+        /* Winner overlay */
+        .light-theme .winner-overlay { background: rgba(0,0,0,0.5); }
+        .light-theme .winner-card { background: #fff; color: #1a1a1a; }
+
         /* safe area for iPhones with notch */
         @supports (padding: env(safe-area-inset-bottom)) {
             .app-wrapper {
@@ -407,7 +516,8 @@
                     <div onclick="toggleHamburger(); showRules('retas')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar retas <span>🏆</span></div>
                     <div onclick="toggleHamburger(); showRules('libre')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar libre <span>🎯</span></div>
                     <div onclick="toggleHamburger(); showMatchesModal()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Partidos <span>🏅</span></div>
-                    <div onclick="toggleHamburger(); showHistoryModal()" style="padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">Historial <span>📋</span></div>
+                    <div onclick="toggleHamburger(); showHistoryModal()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Historial <span>📋</span></div>
+                    <div onclick="toggleHamburger(); toggleTheme()" id="theme-menu-item" style="padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">Tema claro <span>☀️</span></div>
                 </div>
             </div>
             <span id="config-summary" style="font-size:0.8rem; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></span>
@@ -1007,6 +1117,26 @@
             const content = document.getElementById('config-help-card').innerHTML;
             document.getElementById('info-modal-content').innerHTML = content;
             document.getElementById('info-modal').classList.remove('d-none');
+        }
+
+        function toggleTheme() {
+            const isLight = document.body.classList.toggle('light-theme');
+            localStorage.setItem('padel-theme', isLight ? 'light' : 'dark');
+            updateThemeMenuItem();
+        }
+
+        function updateThemeMenuItem() {
+            const item = document.getElementById('theme-menu-item');
+            const isLight = document.body.classList.contains('light-theme');
+            item.innerHTML = isLight
+                ? 'Tema oscuro <span>🌙</span>'
+                : 'Tema claro <span>☀️</span>';
+        }
+
+        // Load theme on startup
+        if (localStorage.getItem('padel-theme') === 'light') {
+            document.body.classList.add('light-theme');
+            updateThemeMenuItem();
         }
 
         function closeInfoModal() {

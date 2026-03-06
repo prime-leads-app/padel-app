@@ -23,8 +23,8 @@
 
 ## Fase 5: Mejoras visuales
 
-- [ ] 5.1 Modo landscape en mobile (tarjetas lado a lado)
-- [ ] 5.2 Modo claro/oscuro (toggle de tema para uso al aire libre)
+- [x] 5.1 Modo landscape en mobile (tarjetas lado a lado)
+- [x] 5.2 Modo claro/oscuro (toggle de tema para uso al aire libre)
 
 ---
 
