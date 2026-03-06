@@ -44,17 +44,28 @@ Modo libre para cualquier actividad. Cada toque suma 1 punto. El primero en lleg
 - **PWA:** Se puede instalar como app en el celular
 - **Cooldown de 3 segundos:** Evita toques accidentales
 
+## Navegación
+
+Toda la app se controla desde el menú hamburguesa (icono ☰) en la parte superior:
+
+- **Configuración** - Muestra/oculta todas las opciones de juego (modo, nombres, formato, etc.)
+- **Ayuda opciones** - Explica qué significa cada opción de configuración
+- **Cómo jugar pádel/retas/libre** - Reglas y ejemplos de cada modo
+- **Historial** - Registro de puntos anotados
+
 ## Configuración
 
-Accesible desde el menú hamburguesa o directamente en la barra de configuración:
+Accesible desde el menú hamburguesa > Configuración:
 
 | Opción | Valores | Descripción |
 |--------|---------|-------------|
-| Formato | Normal / Retas | Tipo de partido |
+| Modo | Padel / Libre | Tipo de marcador |
+| Nombres | Jugadores / Equipos | 2 nombres por equipo o 1 nombre de equipo |
+| Formato | Normal / Retas | Formato de partido (solo Padel) |
 | Sets | 1, 2, 3 | Sets para ganar (solo Normal) |
 | Juegos | 6, 4 | Juegos por set (solo Normal) |
 | Juegos | 4, 6, 8 | Juegos fijos (solo Retas) |
-| Fin | Todos / Anticipado | Cuándo termina la reta (solo Retas) |
+| Fin | Todos / Anticipado | Jugar todos los juegos o terminar con mayoría (solo Retas) |
 | 40-40 | Oro / Ventaja | Qué pasa en empate a 40 |
 
 ## Tecnología
