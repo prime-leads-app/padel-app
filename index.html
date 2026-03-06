@@ -92,7 +92,7 @@
         .score-card.team1 { background: #B71C1C; }
         .score-card.team2 { background: #0D47A1; }
 
-        .score-card { position: relative; overflow: hidden; }
+        .score-card { position: relative; }
 
         .winner-badge {
             position: absolute;
@@ -126,23 +126,34 @@
             transform: scale(0.98);
         }
 
-        .cooldown-bar {
+        @property --cd-angle {
+            syntax: '<angle>';
+            initial-value: 360deg;
+            inherits: false;
+        }
+
+        .cooldown-border {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 8px;
-            background: #ffc107;
-            width: 0;
+            inset: -3px;
+            border-radius: 17px;
+            pointer-events: none;
             z-index: 5;
+            opacity: 0;
         }
 
-        .cooldown-bar.active {
-            animation: cooldownShrink 3s linear forwards;
+        .cooldown-border.active {
+            opacity: 1;
+            background: conic-gradient(from 0deg, #ffc107 var(--cd-angle), transparent var(--cd-angle));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            padding: 3px;
+            animation: cooldownTrace 3s linear forwards;
         }
 
-        @keyframes cooldownShrink {
-            from { width: 100%; }
-            to { width: 0; }
+        @keyframes cooldownTrace {
+            from { --cd-angle: 360deg; }
+            to { --cd-angle: 0deg; }
         }
 
         .card-header-row {
@@ -776,7 +787,7 @@
                         <div class="score-points" id="score-p1" style="color:#FFFFFF">0</div>
                     </div>
                 </div>
-                <div class="cooldown-bar" id="cooldown-p1"></div>
+                <div class="cooldown-border" id="cooldown-p1"></div>
             </div>
 
             <!-- Team 2 -->
@@ -805,7 +816,7 @@
                         <div class="score-points" id="score-p2" style="color:#FFFFFF">0</div>
                     </div>
                 </div>
-                <div class="cooldown-bar" id="cooldown-p2"></div>
+                <div class="cooldown-border" id="cooldown-p2"></div>
             </div>
 
         </div>
@@ -1250,9 +1261,16 @@
 
         function startCooldownBar(player) {
             const bar = document.getElementById('cooldown-p' + player);
+            const card = document.getElementById('card-p' + player);
+            const wasServing = card.classList.contains('serving');
+            if (wasServing) card.classList.remove('serving');
             bar.classList.remove('active');
-            void bar.offsetWidth; // force reflow to restart animation
+            void bar.offsetWidth;
             bar.classList.add('active');
+            bar.addEventListener('animationend', function restore() {
+                bar.removeEventListener('animationend', restore);
+                if (wasServing) card.classList.add('serving');
+            }, { once: true });
         }
 
         function cardTap(e, player) {
