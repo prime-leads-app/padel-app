@@ -206,30 +206,57 @@
         }
 
         .config-modal-card {
-            max-width: 860px !important;
-            width: 96%;
+            max-width: 360px !important;
+            width: 94%;
+        }
+
+        .config-row-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: stretch;
+        }
+        .cfg-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 8px;
+            text-align: center;
+            min-height: 70px;
+        }
+
+        .cfg-card .btn-group-sm .btn {
+            height: 38px;
+        }
+        .config-row-wrap > span {
+            display: flex;
+            align-items: stretch;
         }
 
         .cfg-sq-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             aspect-ratio: 1;
             display: inline-flex !important;
             align-items: center;
             justify-content: center;
             padding: 0 !important;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             border-radius: 8px !important;
         }
 
         .config-name-input {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             border: 1px solid #666;
             background: #2c2c54;
             color: #fff;
             text-align: center;
             border-radius: 6px;
-            padding: 8px 10px;
+            padding: 6px 8px;
             width: 100%;
         }
         .config-name-input:focus {
@@ -244,7 +271,11 @@
 
         @media (min-width: 768px) {
             .config-modal-card {
-                max-width: 900px;
+                max-width: 900px !important;
+            }
+            .config-row-wrap {
+                flex-wrap: nowrap;
+                gap: 16px;
             }
             .config-modal-card .btn {
                 font-size: 1.05rem;
@@ -254,6 +285,12 @@
                 width: 48px !important;
                 height: 48px !important;
                 font-size: 1.05rem !important;
+            }
+            .cfg-card {
+                min-height: 80px;
+            }
+            .cfg-card .btn-group-sm .btn {
+                height: 48px;
             }
             .config-modal-card .config-name-input {
                 font-size: 1.05rem;
@@ -591,12 +628,12 @@
 
         <!-- Config Modal -->
         <div class="winner-overlay d-none" id="config-modal" onclick="if(event.target===this)toggleAllConfig()">
-        <div class="winner-card config-modal-card" id="all-config" style="background: linear-gradient(135deg, #2c3e50, #1a1a2e); padding:20px 24px;">
+        <div class="winner-card config-modal-card" id="all-config" style="background: linear-gradient(135deg, #2c3e50, #1a1a2e); padding:16px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <h5 style="margin:0; font-weight:700;">Configuración</h5>
                 <button class="btn btn-sm" onclick="toggleAllConfig()" style="padding:0 8px; background:#e94560; color:#fff; font-weight:700; border-radius:4px;">✕</button>
             </div>
-            <div style="display:flex; justify-content:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
+            <div style="display:flex; justify-content:center; gap:10px; margin-bottom:12px;">
                 <div class="btn-group" role="group">
                     <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
                     <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
@@ -607,9 +644,9 @@
                 </div>
             </div>
             <div id="libre-config" class="d-none">
-                <div class="config-row" style="display:flex; justify-content:center; gap:16px; font-size:0.85rem; align-items:flex-start;">
-                    <div style="text-align:center;">
-                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Puntos</small>
+                <div class="config-row-wrap">
+                    <div class="cfg-card">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Puntos</small>
                         <div class="btn-group btn-group-sm">
                             <button class="btn btn-outline-light py-0 px-1" onclick="setFreeMaxPoints(5)" id="fmp-5">5</button>
                             <button class="btn btn-outline-light py-0 px-1" onclick="setFreeMaxPoints(10)" id="fmp-10">10</button>
@@ -622,8 +659,8 @@
                 </div>
             </div>
             <div id="padel-config">
-                <div class="config-row" style="display:flex; justify-content:center; gap:16px; font-size:0.85rem; align-items:flex-start;">
-                <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                <div class="config-row-wrap">
+                <div class="cfg-card">
                     <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Formato</small>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-outline-light py-1 px-2 active" onclick="setPadelFormat('normal')" id="fmt-normal">Normal</button>
@@ -631,7 +668,7 @@
                     </div>
                 </div>
                 <span id="config-normal" style="display:flex; gap:12px;">
-                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                    <div class="cfg-card">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Sets</small>
                         <div style="display:flex; gap:4px;">
                             <button class="btn btn-outline-light cfg-sq-btn" onclick="setSetsToWin(1)" id="sets-1">1</button>
@@ -639,7 +676,7 @@
                             <button class="btn btn-outline-light cfg-sq-btn" onclick="setSetsToWin(3)" id="sets-3">3</button>
                         </div>
                     </div>
-                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                    <div class="cfg-card">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Juegos</small>
                         <div style="display:flex; gap:4px;">
                             <button class="btn btn-outline-light cfg-sq-btn active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
@@ -648,7 +685,7 @@
                     </div>
                 </span>
                 <span id="config-retas" style="display:none; gap:12px;">
-                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                    <div class="cfg-card">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Juegos</small>
                         <div style="display:flex; gap:4px;">
                             <button class="btn btn-outline-light cfg-sq-btn" onclick="setRetasGames(4)" id="rg-4">4</button>
@@ -656,7 +693,7 @@
                             <button class="btn btn-outline-light cfg-sq-btn" onclick="setRetasGames(8)" id="rg-8">8</button>
                         </div>
                     </div>
-                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                    <div class="cfg-card">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Fin</small>
                         <div class="btn-group btn-group-sm">
                             <button class="btn btn-outline-light py-1 px-2 active" onclick="setRetasEarlyWin(false)" id="rew-all">Todos</button>
@@ -664,7 +701,7 @@
                         </div>
                     </div>
                 </span>
-                <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                <div class="cfg-card">
                     <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">40-40</small>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-outline-light py-1 px-2 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
@@ -675,24 +712,28 @@
         </div>
             <hr style="border-color:#555; margin:10px 0;">
             <div id="names-config">
-                <div id="names-players-config" style="display:flex; gap:16px; justify-content:center;">
-                    <div style="text-align:center; flex:1;">
+                <div id="names-players-config">
+                    <div style="margin-bottom:10px;">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombres del equipo 1</small>
-                        <input type="text" class="config-name-input" id="cfg-name-p1a" value="Jugador 1" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
-                        <input type="text" class="config-name-input" id="cfg-name-p1b" value="Jugador 2" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()" style="margin-top:4px;">
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" class="config-name-input" id="cfg-name-p1a" value="Jugador 1" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                            <input type="text" class="config-name-input" id="cfg-name-p1b" value="Jugador 2" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                        </div>
                     </div>
-                    <div style="text-align:center; flex:1;">
+                    <div>
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombres del equipo 2</small>
-                        <input type="text" class="config-name-input" id="cfg-name-p2a" value="Jugador 3" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
-                        <input type="text" class="config-name-input" id="cfg-name-p2b" value="Jugador 4" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()" style="margin-top:4px;">
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" class="config-name-input" id="cfg-name-p2a" value="Jugador 3" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                            <input type="text" class="config-name-input" id="cfg-name-p2b" value="Jugador 4" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                        </div>
                     </div>
                 </div>
-                <div id="names-teams-config" class="d-none" style="display:flex; gap:16px; justify-content:center;">
-                    <div style="text-align:center; flex:1;">
+                <div id="names-teams-config" class="d-none">
+                    <div style="margin-bottom:10px;">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombre del equipo 1</small>
                         <input type="text" class="config-name-input" id="cfg-name-team1" value="Equipo 1" maxlength="16" oninput="syncNamesToCards()" onblur="saveToStorage()">
                     </div>
-                    <div style="text-align:center; flex:1;">
+                    <div>
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombre del equipo 2</small>
                         <input type="text" class="config-name-input" id="cfg-name-team2" value="Equipo 2" maxlength="16" oninput="syncNamesToCards()" onblur="saveToStorage()">
                     </div>
@@ -932,7 +973,7 @@
             </a>
             <a href="https://github.com/prime-leads-app/padel-app" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
                 <div class="card-body py-0 px-2 text-center">
-                    <small class="text-white">PadelApp V1.7</small>
+                    <small class="text-white">PadelApp V1.8</small>
                 </div>
             </a>
             <div class="card bg-dark border-secondary flex-fill">
@@ -1916,6 +1957,7 @@
                 document.getElementById('fmt-retas').classList.toggle('active', padelFormat === 'retas');
                 document.getElementById('config-normal').style.display = padelFormat === 'normal' ? 'flex' : 'none';
                 document.getElementById('config-retas').style.display = padelFormat === 'retas' ? 'flex' : 'none';
+                document.getElementById('config-retas-fin').style.display = padelFormat === 'retas' ? 'block' : 'none';
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
                 document.getElementById('rg-4').classList.toggle('active', retasGames === 4);
