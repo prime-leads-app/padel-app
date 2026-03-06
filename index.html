@@ -211,11 +211,9 @@
         }
 
         .config-row-wrap {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: stretch;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
         .cfg-card {
             display: flex;
@@ -233,8 +231,7 @@
             height: 38px;
         }
         .config-row-wrap > span {
-            display: flex;
-            align-items: stretch;
+            display: contents;
         }
 
         .cfg-sq-btn {
@@ -274,7 +271,10 @@
                 max-width: 900px !important;
             }
             .config-row-wrap {
+                display: flex;
                 flex-wrap: nowrap;
+                justify-content: center;
+                align-items: stretch;
                 gap: 16px;
             }
             .config-modal-card .btn {
@@ -667,7 +667,7 @@
                         <button class="btn btn-outline-light py-1 px-2" onclick="setPadelFormat('retas')" id="fmt-retas">Retas</button>
                     </div>
                 </div>
-                <span id="config-normal" style="display:flex; gap:12px;">
+                <span id="config-normal" style="display:contents;">
                     <div class="cfg-card">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Sets</small>
                         <div style="display:flex; gap:4px;">
@@ -684,7 +684,7 @@
                         </div>
                     </div>
                 </span>
-                <span id="config-retas" style="display:none; gap:12px;">
+                <span id="config-retas" style="display:none;">
                     <div class="cfg-card">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Juegos</small>
                         <div style="display:flex; gap:4px;">
@@ -1183,8 +1183,8 @@
                 padelFormat = f;
                 document.getElementById('fmt-normal').classList.toggle('active', f === 'normal');
                 document.getElementById('fmt-retas').classList.toggle('active', f === 'retas');
-                document.getElementById('config-normal').style.display = f === 'normal' ? 'flex' : 'none';
-                document.getElementById('config-retas').style.display = f === 'retas' ? 'flex' : 'none';
+                document.getElementById('config-normal').style.display = f === 'normal' ? 'contents' : 'none';
+                document.getElementById('config-retas').style.display = f === 'retas' ? 'contents' : 'none';
                 resetMatch();
             });
         }
@@ -1955,8 +1955,8 @@
                 });
                 document.getElementById('fmt-normal').classList.toggle('active', padelFormat === 'normal');
                 document.getElementById('fmt-retas').classList.toggle('active', padelFormat === 'retas');
-                document.getElementById('config-normal').style.display = padelFormat === 'normal' ? 'flex' : 'none';
-                document.getElementById('config-retas').style.display = padelFormat === 'retas' ? 'flex' : 'none';
+                document.getElementById('config-normal').style.display = padelFormat === 'normal' ? 'contents' : 'none';
+                document.getElementById('config-retas').style.display = padelFormat === 'retas' ? 'contents' : 'none';
                 document.getElementById('config-retas-fin').style.display = padelFormat === 'retas' ? 'block' : 'none';
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
