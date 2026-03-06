@@ -1180,9 +1180,13 @@
 
         function resetMatch() {
             document.getElementById('confirm-overlay').classList.add('d-none');
-            points = [0, 0]; games = [0, 0]; sets = [[], []]; setsWon = [0, 0];
-            tiebreak = false; advantage = 0; matchOver = false;
-            freePoints = [0, 0]; history = []; serve = 1;
+            if (mode === 'padel') {
+                points = [0, 0]; games = [0, 0]; sets = [[], []]; setsWon = [0, 0];
+                tiebreak = false; advantage = 0; matchOver = false;
+            } else {
+                freePoints = [0, 0]; matchOver = false;
+            }
+            history = []; serve = 1;
             updateServeUI();
             document.getElementById('history-list').innerHTML = '';
             hideWinnerCard();
@@ -1200,13 +1204,24 @@
 
         function clearAll() {
             document.getElementById('confirm-clear-overlay').classList.add('d-none');
-            resetMatch();
+            if (mode === 'padel') {
+                points = [0, 0]; games = [0, 0]; sets = [[], []]; setsWon = [0, 0];
+                tiebreak = false; advantage = 0; matchOver = false;
+            } else {
+                freePoints = [0, 0]; matchOver = false;
+            }
+            history = []; serve = 1;
+            updateServeUI();
+            document.getElementById('history-list').innerHTML = '';
+            hideWinnerCard();
+            lastPointTime = 0;
             document.getElementById('name-p1a').value = 'Jugador 1';
             document.getElementById('name-p1b').value = 'Jugador 2';
             document.getElementById('name-p2a').value = 'Jugador 3';
             document.getElementById('name-p2b').value = 'Jugador 4';
             onNameChange();
             saveToStorage();
+            render();
         }
     </script>
     <script>
