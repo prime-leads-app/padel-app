@@ -115,7 +115,7 @@ Una vez instalada, se abre sin barra de navegador y funciona sin conexión a int
 4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
 5. Abre un Pull Request
 
-Para sugerencias directas: [Enviar mensaje por WhatsApp](https://wa.me/525951109110?text=Hola,%20quiero%20aportar%20una%20sugerencia%20para%20la%20app%20padel%20scoreboard)
+Para sugerencias directas: [Enviar mensaje por WhatsApp](https://wa.me/525951109110?text=Hola%2C+quiero+aportar+una+sugerencia+o+reportar+un+problema+de+la+app+PadelScoreBoard)
 
 ## Autor
 
