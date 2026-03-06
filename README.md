@@ -29,20 +29,28 @@ Formato informal popular en México. Se juega un número fijo de juegos sin sets
 
 ### Libre
 
-Modo libre para cualquier actividad. Cada toque suma 1 punto. El primero en llegar a 30 puntos gana.
+Modo libre para cualquier actividad. Cada toque suma 1 punto.
+
+- **Puntos para ganar:** 5, 10, 15, 20, 25 o 30 (configurable)
 
 ## Funcionalidades
 
 - **Nombres editables:** Modo Jugadores (2 nombres por equipo) o Equipos (1 nombre por equipo)
 - **Sonidos diferenciados:** Cada equipo tiene un tono distinto al anotar
-- **Indicador de saque:** Muestra qué equipo tiene el saque
-- **Historial:** Registro de todos los puntos con hora, separado por modo
+- **Indicador de saque:** Borde amarillo en el card del equipo que saca
+- **Cooldown de 3 segundos:** Borde animado que recorre el perímetro del card para evitar toques accidentales
+- **Vibración:** Feedback háptico al anotar punto (en dispositivos compatibles)
+- **Temporizador:** Cuenta el tiempo del partido desde el primer punto hasta que termina
+- **Compartir resultado:** Botón para compartir el resultado final (Web Share API o copiar al portapapeles)
+- **Historial de puntos:** Registro de todos los puntos con hora, separado por modo
+- **Historial de partidos:** Registro de partidos terminados con fecha, resultado y duración
+- **Tema claro/oscuro:** Toggle desde el menú para uso al aire libre
 - **Deshacer:** Permite revertir el último punto anotado
 - **Reiniciar:** Resetea solo los marcadores, mantiene nombres
 - **Limpiar:** Resetea marcadores y nombres
 - **Persistencia:** Todo se guarda en localStorage, no se pierde al cerrar
 - **PWA:** Se puede instalar como app en el celular
-- **Cooldown de 3 segundos:** Evita toques accidentales
+- **Landscape:** En mobile, las tarjetas se muestran lado a lado en modo horizontal
 
 ## Navegación
 
@@ -51,7 +59,9 @@ Toda la app se controla desde el menú hamburguesa (icono ☰) en la parte super
 - **Configuración** - Muestra/oculta todas las opciones de juego (modo, nombres, formato, etc.)
 - **Ayuda opciones** - Explica qué significa cada opción de configuración
 - **Cómo jugar pádel/retas/libre** - Reglas y ejemplos de cada modo
+- **Partidos** - Historial de partidos terminados
 - **Historial** - Registro de puntos anotados
+- **Tema claro/oscuro** - Alterna entre modo oscuro y claro
 
 ## Configuración
 
@@ -66,6 +76,7 @@ Accesible desde el menú hamburguesa > Configuración:
 | Juegos | 6, 4 | Juegos por set (solo Normal) |
 | Juegos | 4, 6, 8 | Juegos fijos (solo Retas) |
 | Fin | Todos / Anticipado | Jugar todos los juegos o terminar con mayoría (solo Retas) |
+| Puntos | 5, 10, 15, 20, 25, 30 | Puntos para ganar (solo Libre) |
 | 40-40 | Oro / Ventaja | Qué pasa en empate a 40 |
 
 ## Instalar en el celular
