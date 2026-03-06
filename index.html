@@ -1146,7 +1146,7 @@
             document.getElementById('names-players-config').classList.toggle('d-none', m === 'teams');
             const teamsConfig = document.getElementById('names-teams-config');
             teamsConfig.classList.toggle('d-none', m === 'players');
-            if (m === 'teams') teamsConfig.style.display = 'flex';
+            if (m === 'teams') teamsConfig.style.display = 'block';
             updateServeUI();
             saveToStorage();
         }
