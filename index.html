@@ -92,7 +92,7 @@
         .score-card.team1 { background: #B71C1C; }
         .score-card.team2 { background: #0D47A1; }
 
-        .score-card { position: relative; }
+        .score-card { position: relative; overflow: hidden; }
 
         .winner-badge {
             position: absolute;
@@ -124,6 +124,25 @@
         .score-card:active {
             opacity: 0.7;
             transform: scale(0.98);
+        }
+
+        .cooldown-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 8px;
+            background: #ffc107;
+            width: 0;
+            z-index: 5;
+        }
+
+        .cooldown-bar.active {
+            animation: cooldownShrink 3s linear forwards;
+        }
+
+        @keyframes cooldownShrink {
+            from { width: 100%; }
+            to { width: 0; }
         }
 
         .card-header-row {
@@ -642,6 +661,7 @@
                         <div class="score-points" id="score-p1" style="color:#FFFFFF">0</div>
                     </div>
                 </div>
+                <div class="cooldown-bar" id="cooldown-p1"></div>
             </div>
 
             <!-- Team 2 -->
@@ -667,6 +687,7 @@
                         <div class="score-points" id="score-p2" style="color:#FFFFFF">0</div>
                     </div>
                 </div>
+                <div class="cooldown-bar" id="cooldown-p2"></div>
             </div>
 
         </div>
@@ -1046,16 +1067,25 @@
         let lastPointTime = 0;
         const POINT_COOLDOWN = 3000; // 3 segundos
 
+        function startCooldownBar(player) {
+            const bar = document.getElementById('cooldown-p' + player);
+            bar.classList.remove('active');
+            void bar.offsetWidth; // force reflow to restart animation
+            bar.classList.add('active');
+        }
+
         function cardTap(e, player) {
             if (e.target.classList.contains('player-name')) return;
             const now = Date.now();
             if (now - lastPointTime < POINT_COOLDOWN) return;
             lastPointTime = now;
             addPoint(player);
+            startCooldownBar(player);
         }
 
         function addPoint(player) {
             if (matchOver) return;
+            if (navigator.vibrate) navigator.vibrate(50);
             saveState();
             const prevGames = games[0] + games[1];
             const prevSets = setsWon[0] + setsWon[1];

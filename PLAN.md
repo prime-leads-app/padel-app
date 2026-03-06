@@ -8,8 +8,8 @@
 
 ## Fase 2: Feedback visual y haptico
 
-- [ ] 2.1 Cooldown con indicador visual (barra de progreso o timer que muestre los 3 segundos)
-- [ ] 2.2 Vibracion al anotar punto (navigator.vibrate)
+- [x] 2.1 Cooldown con indicador visual (barra de progreso o timer que muestre los 3 segundos)
+- [x] 2.2 Vibracion al anotar punto (navigator.vibrate)
 
 ## Fase 3: Funcionalidad de partido
 
