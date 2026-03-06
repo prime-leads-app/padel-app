@@ -205,9 +205,17 @@
             padding: 2px 4px;
         }
 
+        #config-modal {
+            align-items: flex-start;
+            padding: 0;
+        }
         .config-modal-card {
-            max-width: 360px !important;
-            width: 94%;
+            max-width: 100% !important;
+            width: 100%;
+            min-height: 100dvh;
+            border-radius: 0 !important;
+            display: flex;
+            flex-direction: column;
         }
 
         .config-row-wrap {
@@ -267,8 +275,15 @@
         }
 
         @media (min-width: 768px) {
+            #config-modal {
+                align-items: center;
+                padding: 20px;
+            }
             .config-modal-card {
                 max-width: 900px !important;
+                min-height: auto;
+                border-radius: 24px !important;
+                width: 94%;
             }
             .config-row-wrap {
                 display: flex;
@@ -973,7 +988,7 @@
             </a>
             <a href="https://github.com/prime-leads-app/padel-app" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
                 <div class="card-body py-0 px-2 text-center">
-                    <small class="text-white">PadelApp V1.8</small>
+                    <small class="text-white">PadelApp V1.9</small>
                 </div>
             </a>
             <div class="card bg-dark border-secondary flex-fill">
