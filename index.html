@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>El Rey Padel Scoreboard</title>
+    <title>Padel Scoreboard</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -373,9 +373,7 @@
 <body>
     <div class="app-wrapper">
         <!-- Header -->
-        <div class="header" style="display:flex; align-items:center; justify-content:center; gap:10px;">
-            <img src="logo.png" alt="Logo" style="height:1.1rem;">
-            <h1 style="margin:0;">El Rey Padel</h1>
+        <div class="header" style="display:flex; align-items:center; justify-content:center;">
             <div class="btn-group btn-group-sm" role="group">
                 <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
                 <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
@@ -562,6 +560,25 @@
             </div>
             <div class="card-body p-2 d-none" id="history-body" style="max-height: 120px; overflow-y: auto;">
                 <div id="history-list"></div>
+            </div>
+        </div>
+
+        <!-- Footer cards -->
+        <div class="d-flex gap-2 mt-auto">
+            <a href="https://wa.me/525951109110?text=Quiero%20enviar%20una%20sugerencia" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
+                <div class="card-body p-2 text-center">
+                    <small class="text-white">💬 Quiero enviar una sugerencia</small>
+                </div>
+            </a>
+            <a href="https://github.com/prime-leads-app/padel-app" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
+                <div class="card-body p-2 text-center">
+                    <small class="text-white">⭐ Contribuir en GitHub</small>
+                </div>
+            </a>
+            <div class="card bg-dark border-secondary flex-fill">
+                <div class="card-body p-2 text-center">
+                    <small class="text-white" style="opacity:0.7;">Desarrollado por Frank Zamora</small>
+                </div>
             </div>
         </div>
     </div>
