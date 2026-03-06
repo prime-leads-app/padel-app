@@ -1,0 +1,4 @@
+logo.png
+*.png
+.claude/
+.playwright-mcp/
