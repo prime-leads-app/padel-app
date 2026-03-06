@@ -13,8 +13,8 @@
 
 ## Fase 3: Funcionalidad de partido
 
-- [ ] 3.1 Temporizador de partido (inicia al primer punto, se detiene al terminar)
-- [ ] 3.2 Compartir resultado final (Web Share API / copiar al clipboard)
+- [x] 3.1 Temporizador de partido (inicia al primer punto, se detiene al terminar)
+- [x] 3.2 Compartir resultado final (Web Share API / copiar al clipboard)
 
 ## Fase 4: Historial de partidos
 

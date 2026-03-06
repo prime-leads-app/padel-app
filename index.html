@@ -410,6 +410,7 @@
                 </div>
             </div>
             <span id="config-summary" style="font-size:0.8rem; color:#aaa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></span>
+            <span id="match-timer" style="font-size:0.8rem; color:#ffc107; font-weight:600; margin-left:auto; flex-shrink:0;">00:00</span>
         </div>
 
         <!-- Config (all options, toggled via hamburger) -->
@@ -644,7 +645,10 @@
                     <div style="font-size:4rem; line-height:1;">&#127942;</div>
                     <h3 style="margin:8px 0; font-weight:900; text-shadow:2px 2px 4px rgba(0,0,0,0.3);" id="winner-text-p1"></h3>
                     <p style="font-size:1rem; opacity:0.9; margin-bottom:10px;" id="winner-score-p1"></p>
-                    <button class="btn btn-light btn-sm" onclick="event.stopPropagation(); resetMatch();" style="font-weight:700;">Nuevo Partido</button>
+                    <div style="display:flex; gap:8px; justify-content:center;">
+                        <button class="btn btn-light btn-sm" onclick="event.stopPropagation(); resetMatch();" style="font-weight:700;">Nuevo Partido</button>
+                        <button class="btn btn-outline-light btn-sm" onclick="event.stopPropagation(); shareResult();" style="font-weight:700;">Compartir</button>
+                    </div>
                 </div>
                 <div class="card-header-row" id="players-row-p1">
                     <span class="serve-indicator d-none" id="serve-p1"></span>
@@ -670,7 +674,10 @@
                     <div style="font-size:4rem; line-height:1;">&#127942;</div>
                     <h3 style="margin:8px 0; font-weight:900; text-shadow:2px 2px 4px rgba(0,0,0,0.3);" id="winner-text-p2"></h3>
                     <p style="font-size:1rem; opacity:0.9; margin-bottom:10px;" id="winner-score-p2"></p>
-                    <button class="btn btn-light btn-sm" onclick="event.stopPropagation(); resetMatch();" style="font-weight:700;">Nuevo Partido</button>
+                    <div style="display:flex; gap:8px; justify-content:center;">
+                        <button class="btn btn-light btn-sm" onclick="event.stopPropagation(); resetMatch();" style="font-weight:700;">Nuevo Partido</button>
+                        <button class="btn btn-outline-light btn-sm" onclick="event.stopPropagation(); shareResult();" style="font-weight:700;">Compartir</button>
+                    </div>
                 </div>
                 <div class="card-header-row" id="players-row-p2">
                     <span class="serve-indicator d-none" id="serve-p2"></span>
@@ -818,6 +825,9 @@
         let serve = 1;
         let history = [];
         let matchOver = false;
+        let timerStart = 0;
+        let timerInterval = null;
+        let timerElapsed = 0;
 
         let points = [0, 0];
         let games = [0, 0];
@@ -990,6 +1000,34 @@
             document.getElementById('info-modal').classList.add('d-none');
         }
 
+        // ── Timer ──
+        function startTimer() {
+            if (timerInterval) return;
+            timerStart = Date.now() - timerElapsed;
+            timerInterval = setInterval(updateTimerDisplay, 1000);
+            updateTimerDisplay();
+        }
+
+        function stopTimer() {
+            if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+            timerElapsed = timerStart ? Date.now() - timerStart : 0;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerStart = 0;
+            timerElapsed = 0;
+            document.getElementById('match-timer').textContent = '00:00';
+        }
+
+        function updateTimerDisplay() {
+            const elapsed = Math.floor((Date.now() - timerStart) / 1000);
+            const m = Math.floor(elapsed / 60);
+            const s = elapsed % 60;
+            document.getElementById('match-timer').textContent =
+                String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
         // ── Sonidos ──
         function playSound(type, player) {
             try {
@@ -1086,6 +1124,7 @@
         function addPoint(player) {
             if (matchOver) return;
             if (navigator.vibrate) navigator.vibrate(50);
+            startTimer();
             saveState();
             const prevGames = games[0] + games[1];
             const prevSets = setsWon[0] + setsWon[1];
@@ -1423,17 +1462,46 @@
         }
 
         function showWinner(p) {
+            stopTimer();
+            const timerText = document.getElementById('match-timer').textContent;
             let scoreText = '';
             if (mode === 'padel' && padelFormat === 'retas') {
-                scoreText = `Juegos: ${games[0]} - ${games[1]}`;
+                scoreText = `Juegos: ${games[0]} - ${games[1]} · ${timerText}`;
             } else if (mode === 'padel') {
-                scoreText = `Sets: ${setsWon[0]} - ${setsWon[1]}`;
+                scoreText = `Sets: ${setsWon[0]} - ${setsWon[1]} · ${timerText}`;
             } else {
-                scoreText = `${freePoints[0]} - ${freePoints[1]}`;
+                scoreText = `${freePoints[0]} - ${freePoints[1]} · ${timerText}`;
             }
             document.getElementById('winner-text-p' + p).textContent = `${getName(p)} gana!`;
             document.getElementById('winner-score-p' + p).textContent = scoreText;
             document.getElementById('winner-badge-p' + p).classList.add('show');
+        }
+
+        function shareResult() {
+            const winner = setsWon[0] > setsWon[1] || games[0] > games[1] || freePoints[0] > freePoints[1] ? 1 : 2;
+            const timerText = document.getElementById('match-timer').textContent;
+            let text = `${getName(winner)} gana!\n`;
+            if (mode === 'padel' && padelFormat === 'retas') {
+                text += `Juegos: ${games[0]} - ${games[1]}`;
+            } else if (mode === 'padel') {
+                text += `Sets: ${setsWon[0]} - ${setsWon[1]}`;
+                if (sets[0].length > 0) {
+                    const detail = sets[0].map((s, i) => `${s}-${sets[1][i]}`).join(', ');
+                    text += ` (${detail})`;
+                }
+            } else {
+                text += `${freePoints[0]} - ${freePoints[1]}`;
+            }
+            text += ` | ${timerText}`;
+            text += `\n${getName(1)} vs ${getName(2)}`;
+
+            if (navigator.share) {
+                navigator.share({ text }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Resultado copiado al portapapeles');
+                }).catch(() => {});
+            }
         }
 
         function onNameChange() {
@@ -1578,6 +1646,7 @@
             document.getElementById('history-list').innerHTML = '';
             hideWinnerCard();
             lastPointTime = 0;
+            resetTimer();
             render();
             updateConfigSummary();
         }
@@ -1603,6 +1672,7 @@
             document.getElementById('history-list').innerHTML = '';
             hideWinnerCard();
             lastPointTime = 0;
+            resetTimer();
             document.getElementById('name-p1a').value = 'Jugador 1';
             document.getElementById('name-p1b').value = 'Jugador 2';
             document.getElementById('name-p2a').value = 'Jugador 3';
