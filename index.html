@@ -373,30 +373,35 @@
 <body>
     <div class="app-wrapper">
         <!-- Header -->
-        <div class="header" style="display:flex; align-items:center; justify-content:center; gap:10px;">
-            <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
-                <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
-            </div>
-            <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-outline-light mode-btn active" onclick="setNameMode('players')" id="btn-players">Jugadores</button>
-                <button class="btn btn-outline-light mode-btn" onclick="setNameMode('teams')" id="btn-teams">Equipos</button>
-            </div>
+        <div class="header" style="display:flex; align-items:center; justify-content:center;">
             <div style="position:relative;">
                 <button class="btn btn-outline-light btn-sm" onclick="toggleHamburger()" id="hamburger-btn" style="font-size:1.2rem; line-height:1; padding:2px 6px;">☰</button>
-                <div class="d-none" id="hamburger-menu" style="position:absolute; right:0; top:100%; margin-top:4px; background:#2c2c54; border:1px solid #555; border-radius:8px; min-width:220px; z-index:999; overflow:hidden;">
-                    <div onclick="toggleHamburger(); showHistoryModal()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Historial <span>📋</span></div>
-                    <div onclick="toggleHamburger(); toggleConfigHelp()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Configuración <span>⚙️</span></div>
+                <div class="d-none" id="hamburger-menu" style="position:absolute; left:50%; transform:translateX(-50%); top:100%; margin-top:4px; background:#2c2c54; border:1px solid #555; border-radius:8px; min-width:220px; z-index:999; overflow:hidden;">
+                    <div onclick="toggleHamburger(); toggleAllConfig()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Configuración <span>⚙️</span></div>
+                    <div onclick="toggleHamburger(); toggleConfigHelp()" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Ayuda opciones <span>❓</span></div>
                     <div onclick="toggleHamburger(); showRules('padel')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar pádel <span>🎾</span></div>
                     <div onclick="toggleHamburger(); showRules('retas')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar retas <span>🏆</span></div>
-                    <div onclick="toggleHamburger(); showRules('libre')" style="padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">Cómo jugar libre <span>🎯</span></div>
+                    <div onclick="toggleHamburger(); showRules('libre')" style="padding:10px 14px; cursor:pointer; border-bottom:1px solid #444; display:flex; justify-content:space-between; align-items:center;">Cómo jugar libre <span>🎯</span></div>
+                    <div onclick="toggleHamburger(); showHistoryModal()" style="padding:10px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">Historial <span>📋</span></div>
                 </div>
             </div>
         </div>
 
-        <!-- Config -->
-        <div id="padel-config">
-            <div class="config-row" style="display:flex; justify-content:center; gap:4px; font-size:0.75rem;">
+        <!-- Config (all options, toggled via hamburger) -->
+        <div id="all-config" class="d-none">
+            <div style="display:flex; justify-content:center; gap:6px; margin-bottom:4px;">
+                <div class="btn-group btn-group-sm" role="group">
+                    <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
+                    <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
+                </div>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button class="btn btn-outline-light mode-btn active" onclick="setNameMode('players')" id="btn-players">Jugadores</button>
+                    <button class="btn btn-outline-light mode-btn" onclick="setNameMode('teams')" id="btn-teams">Equipos</button>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm" onclick="toggleAllConfig()" style="padding:0 8px;">✕</button>
+            </div>
+            <div id="padel-config">
+                <div class="config-row" style="display:flex; justify-content:center; gap:4px; font-size:0.75rem;">
                 <div style="text-align:center;">
                     <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Formato</small>
                     <div class="btn-group btn-group-sm">
@@ -446,6 +451,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
         <!-- Config Help (hidden template) -->
@@ -1259,6 +1265,10 @@
             const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
             div.textContent = `${t} - ${text}`;
             list.insertBefore(div, list.firstChild);
+        }
+
+        function toggleAllConfig() {
+            document.getElementById('all-config').classList.toggle('d-none');
         }
 
         function toggleHamburger() {
