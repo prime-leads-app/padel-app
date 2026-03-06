@@ -180,37 +180,91 @@
         }
 
         .player-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            border: none;
-            background: transparent;
             color: #fff;
             text-align: center;
+            padding: 4px 2px;
+            cursor: pointer;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.12);
+            flex: 1;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s;
+        }
+
+        .player-name:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .team-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            padding: 2px 4px;
+        }
+
+        .config-modal-card {
+            max-width: 860px !important;
+            width: 96%;
+        }
+
+        .cfg-sq-btn {
+            width: 40px;
+            height: 40px;
+            aspect-ratio: 1;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            font-size: 0.9rem;
+            border-radius: 8px !important;
+        }
+
+        .config-name-input {
+            font-size: 0.9rem;
+            border: 1px solid #666;
+            background: #2c2c54;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 10px;
             width: 100%;
-            border-bottom: 2px dashed rgba(255,255,255,0.25);
-            padding: 2px 0;
         }
-
-        .player-name:focus {
+        .config-name-input:focus {
             outline: none;
-            border-bottom-color: #ffc107;
+            border-color: #ffc107;
+        }
+        .light-theme .config-name-input {
+            background: #fff;
+            color: #1a1a1a;
+            border-color: #aaa;
         }
 
-        .serve-indicator {
-            width: 10px; height: 10px;
-            min-width: 10px;
-            border-radius: 50%;
-            background: #ffc107;
-            display: inline-block;
-            flex-shrink: 0;
-            margin-right: 4px;
-            animation: pulse 1.5s infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        @media (min-width: 768px) {
+            .config-modal-card {
+                max-width: 900px;
+            }
+            .config-modal-card .btn {
+                font-size: 1.05rem;
+                padding: 8px 16px;
+            }
+            .cfg-sq-btn {
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 1.05rem !important;
+            }
+            .config-modal-card .config-name-input {
+                font-size: 1.05rem;
+                padding: 10px 12px;
+            }
+            .config-modal-card h5 {
+                font-size: 1.5rem;
+            }
+            .config-modal-card small {
+                font-size: 0.95rem !important;
+            }
         }
 
 
@@ -490,7 +544,7 @@
 
         /* Config area */
         .light-theme #all-config {
-            background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 6px;
+            background: #fff !important; border: 1px solid #ddd; border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         }
         .light-theme #all-config .btn-outline-light {
@@ -535,21 +589,25 @@
             <span id="match-timer" style="font-size:0.8rem; color:#ffc107; font-weight:600; margin-left:auto; flex-shrink:0;">00:00</span>
         </div>
 
-        <!-- Config (all options, toggled via hamburger) -->
-        <div id="all-config" class="d-none">
-            <div style="display:flex; justify-content:center; gap:6px; margin-bottom:4px;">
-                <div class="btn-group btn-group-sm" role="group">
+        <!-- Config Modal -->
+        <div class="winner-overlay d-none" id="config-modal" onclick="if(event.target===this)toggleAllConfig()">
+        <div class="winner-card config-modal-card" id="all-config" style="background: linear-gradient(135deg, #2c3e50, #1a1a2e); padding:20px 24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h5 style="margin:0; font-weight:700;">Configuración</h5>
+                <button class="btn btn-sm" onclick="toggleAllConfig()" style="padding:0 8px; background:#e94560; color:#fff; font-weight:700; border-radius:4px;">✕</button>
+            </div>
+            <div style="display:flex; justify-content:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
+                <div class="btn-group" role="group">
                     <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
                     <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
                 </div>
-                <div class="btn-group btn-group-sm" role="group">
+                <div class="btn-group" role="group">
                     <button class="btn btn-outline-light name-btn active" onclick="setNameMode('players')" id="btn-players">Jugadores</button>
                     <button class="btn btn-outline-light name-btn" onclick="setNameMode('teams')" id="btn-teams">Equipos</button>
                 </div>
-                <button class="btn btn-sm" onclick="toggleAllConfig()" style="padding:0 8px; background:#e94560; color:#fff; font-weight:700; border-radius:4px;">✕</button>
             </div>
             <div id="libre-config" class="d-none">
-                <div class="config-row" style="display:flex; justify-content:center; gap:4px; font-size:0.75rem;">
+                <div class="config-row" style="display:flex; justify-content:center; gap:16px; font-size:0.85rem; align-items:flex-start;">
                     <div style="text-align:center;">
                         <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Puntos</small>
                         <div class="btn-group btn-group-sm">
@@ -564,53 +622,79 @@
                 </div>
             </div>
             <div id="padel-config">
-                <div class="config-row" style="display:flex; justify-content:center; gap:4px; font-size:0.75rem;">
-                <div style="text-align:center;">
-                    <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Formato</small>
+                <div class="config-row" style="display:flex; justify-content:center; gap:16px; font-size:0.85rem; align-items:flex-start;">
+                <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                    <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Formato</small>
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setPadelFormat('normal')" id="fmt-normal">Normal</button>
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setPadelFormat('retas')" id="fmt-retas">Retas</button>
+                        <button class="btn btn-outline-light py-1 px-2 active" onclick="setPadelFormat('normal')" id="fmt-normal">Normal</button>
+                        <button class="btn btn-outline-light py-1 px-2" onclick="setPadelFormat('retas')" id="fmt-retas">Retas</button>
                     </div>
                 </div>
-                <span id="config-normal" style="display:flex; gap:4px;">
-                    <div style="text-align:center;">
-                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Sets</small>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(1)" id="sets-1">1</button>
-                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setSetsToWin(2)" id="sets-2">2</button>
-                            <button class="btn btn-outline-light py-0 px-1" onclick="setSetsToWin(3)" id="sets-3">3</button>
+                <span id="config-normal" style="display:flex; gap:12px;">
+                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Sets</small>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-outline-light cfg-sq-btn" onclick="setSetsToWin(1)" id="sets-1">1</button>
+                            <button class="btn btn-outline-light cfg-sq-btn active" onclick="setSetsToWin(2)" id="sets-2">2</button>
+                            <button class="btn btn-outline-light cfg-sq-btn" onclick="setSetsToWin(3)" id="sets-3">3</button>
                         </div>
                     </div>
-                    <div style="text-align:center;">
-                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Juegos</small>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
-                            <button class="btn btn-outline-light py-0 px-1" onclick="setGamesPerSet(4)" id="gps-4">4</button>
-                        </div>
-                    </div>
-                </span>
-                <span id="config-retas" style="display:none; gap:4px;">
-                    <div style="text-align:center;">
-                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Juegos</small>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(4)" id="rg-4">4</button>
-                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasGames(6)" id="rg-6">6</button>
-                            <button class="btn btn-outline-light py-0 px-1" onclick="setRetasGames(8)" id="rg-8">8</button>
-                        </div>
-                    </div>
-                    <div style="text-align:center;">
-                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">Fin</small>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-light py-0 px-1 active" onclick="setRetasEarlyWin(false)" id="rew-all">Todos</button>
-                            <button class="btn btn-outline-light py-0 px-1" onclick="setRetasEarlyWin(true)" id="rew-early">Anticipado</button>
+                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Juegos</small>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-outline-light cfg-sq-btn active" onclick="setGamesPerSet(6)" id="gps-6">6</button>
+                            <button class="btn btn-outline-light cfg-sq-btn" onclick="setGamesPerSet(4)" id="gps-4">4</button>
                         </div>
                     </div>
                 </span>
-                <div style="text-align:center;">
-                    <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:2px;">40-40</small>
+                <span id="config-retas" style="display:none; gap:12px;">
+                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Juegos</small>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-outline-light cfg-sq-btn" onclick="setRetasGames(4)" id="rg-4">4</button>
+                            <button class="btn btn-outline-light cfg-sq-btn active" onclick="setRetasGames(6)" id="rg-6">6</button>
+                            <button class="btn btn-outline-light cfg-sq-btn" onclick="setRetasGames(8)" id="rg-8">8</button>
+                        </div>
+                    </div>
+                    <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Fin</small>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-light py-1 px-2 active" onclick="setRetasEarlyWin(false)" id="rew-all">Todos</button>
+                            <button class="btn btn-outline-light py-1 px-2" onclick="setRetasEarlyWin(true)" id="rew-early">Anticipado</button>
+                        </div>
+                    </div>
+                </span>
+                <div style="text-align:center; padding:8px 12px; background:rgba(255,255,255,0.06); border-radius:8px;">
+                    <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">40-40</small>
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-light py-0 px-1 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
-                        <button class="btn btn-outline-light py-0 px-1" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
+                        <button class="btn btn-outline-light py-1 px-2 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
+                        <button class="btn btn-outline-light py-1 px-2" onclick="setDeuceMode('advantage')" id="deuce-adv">Ventaja</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <hr style="border-color:#555; margin:10px 0;">
+            <div id="names-config">
+                <div id="names-players-config" style="display:flex; gap:16px; justify-content:center;">
+                    <div style="text-align:center; flex:1;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombres del equipo 1</small>
+                        <input type="text" class="config-name-input" id="cfg-name-p1a" value="Jugador 1" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                        <input type="text" class="config-name-input" id="cfg-name-p1b" value="Jugador 2" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()" style="margin-top:4px;">
+                    </div>
+                    <div style="text-align:center; flex:1;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombres del equipo 2</small>
+                        <input type="text" class="config-name-input" id="cfg-name-p2a" value="Jugador 3" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                        <input type="text" class="config-name-input" id="cfg-name-p2b" value="Jugador 4" maxlength="12" oninput="syncNamesToCards()" onblur="saveToStorage()" style="margin-top:4px;">
+                    </div>
+                </div>
+                <div id="names-teams-config" class="d-none" style="display:flex; gap:16px; justify-content:center;">
+                    <div style="text-align:center; flex:1;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombre del equipo 1</small>
+                        <input type="text" class="config-name-input" id="cfg-name-team1" value="Equipo 1" maxlength="16" oninput="syncNamesToCards()" onblur="saveToStorage()">
+                    </div>
+                    <div style="text-align:center; flex:1;">
+                        <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">Nombre del equipo 2</small>
+                        <input type="text" class="config-name-input" id="cfg-name-team2" value="Equipo 2" maxlength="16" oninput="syncNamesToCards()" onblur="saveToStorage()">
                     </div>
                 </div>
             </div>
@@ -772,15 +856,12 @@
                         <button class="btn btn-outline-light btn-sm" onclick="event.stopPropagation(); shareResult();" style="font-weight:700;">Compartir</button>
                     </div>
                 </div>
-                <div class="card-header-row" id="players-row-p1">
-                    <span class="serve-indicator d-none" id="serve-p1"></span>
-                    <input type="text" class="player-name" value="Jugador 1" id="name-p1a" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
-                    <span style="opacity:0.4; margin:0 2px;">/</span>
-                    <input type="text" class="player-name" value="Jugador 2" id="name-p1b" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
+                <div class="card-header-row" id="players-row-p1" style="gap:4px;">
+                    <span class="player-name" id="name-p1a" data-player="p1a">Jugador 1</span>
+                    <span class="player-name" id="name-p1b" data-player="p1b">Jugador 2</span>
                 </div>
                 <div class="card-header-row d-none" id="team-row-p1">
-                    <span class="serve-indicator d-none" id="serve-p1-team"></span>
-                    <input type="text" class="player-name" value="Equipo 1" id="name-team1" maxlength="16" oninput="onNameChange()" onblur="saveToStorage()">
+                    <span class="team-name" id="name-team1">Equipo 1</span>
                 </div>
                 <div class="card-body-row">
                     <div class="card-info">
@@ -801,15 +882,12 @@
                         <button class="btn btn-outline-light btn-sm" onclick="event.stopPropagation(); shareResult();" style="font-weight:700;">Compartir</button>
                     </div>
                 </div>
-                <div class="card-header-row" id="players-row-p2">
-                    <span class="serve-indicator d-none" id="serve-p2"></span>
-                    <input type="text" class="player-name" value="Jugador 3" id="name-p2a" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
-                    <span style="opacity:0.4; margin:0 2px;">/</span>
-                    <input type="text" class="player-name" value="Jugador 4" id="name-p2b" maxlength="12" oninput="onNameChange()" onblur="saveToStorage()">
+                <div class="card-header-row" id="players-row-p2" style="gap:4px;">
+                    <span class="player-name" id="name-p2a" data-player="p2a">Jugador 3</span>
+                    <span class="player-name" id="name-p2b" data-player="p2b">Jugador 4</span>
                 </div>
                 <div class="card-header-row d-none" id="team-row-p2">
-                    <span class="serve-indicator d-none" id="serve-p2-team"></span>
-                    <input type="text" class="player-name" value="Equipo 2" id="name-team2" maxlength="16" oninput="onNameChange()" onblur="saveToStorage()">
+                    <span class="team-name" id="name-team2">Equipo 2</span>
                 </div>
                 <div class="card-body-row">
                     <div class="card-info">
@@ -854,7 +932,7 @@
             </a>
             <a href="https://github.com/prime-leads-app/padel-app" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
                 <div class="card-body py-0 px-2 text-center">
-                    <small class="text-white">PadelApp V1.6</small>
+                    <small class="text-white">PadelApp V1.7</small>
                 </div>
             </a>
             <div class="card bg-dark border-secondary flex-fill">
@@ -956,6 +1034,7 @@
         let retasEarlyWin = false; // true = termina al tener mayoría, false = jugar todos
         let freeMaxPoints = 30;
         let deuceMode = 'golden'; // 'golden' = punto de oro, 'advantage' = ventaja tradicional
+        let playerStats = { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
         let serve = 1;
         let history = [];
         let matchOver = false;
@@ -986,7 +1065,8 @@
                 try {
                     const d = JSON.parse(raw);
                     const modeNames = m === 'padel' ? d.namesPadel : d.namesFree;
-                    if (modeNames && modeNames.length === 4) setNamesUI(modeNames);
+                    const hasCustomNames = modeNames && modeNames.length === 4 && modeNames.some((n, i) => n !== ['Jugador 1','Jugador 2','Jugador 3','Jugador 4'][i]);
+                    if (hasCustomNames) setNamesUI(modeNames);
                     const histHTML = m === 'padel' ? d.historyPadelHTML : d.historyFreeHTML;
                     document.getElementById('history-list').innerHTML = histHTML || '';
                 } catch(e) {}
@@ -1007,6 +1087,10 @@
             document.getElementById('team-row-p1').classList.toggle('d-none', m === 'players');
             document.getElementById('players-row-p2').classList.toggle('d-none', m === 'teams');
             document.getElementById('team-row-p2').classList.toggle('d-none', m === 'players');
+            document.getElementById('names-players-config').classList.toggle('d-none', m === 'teams');
+            const teamsConfig = document.getElementById('names-teams-config');
+            teamsConfig.classList.toggle('d-none', m === 'players');
+            if (m === 'teams') teamsConfig.style.display = 'flex';
             updateServeUI();
             saveToStorage();
         }
@@ -1274,10 +1358,13 @@
         }
 
         function cardTap(e, player) {
-            if (e.target.classList.contains('player-name')) return;
             const now = Date.now();
             if (now - lastPointTime < POINT_COOLDOWN) return;
             lastPointTime = now;
+            const playerId = e.target.dataset && e.target.dataset.player;
+            if (playerId && nameMode === 'players') {
+                playerStats[playerId]++;
+            }
             addPoint(player);
             startCooldownBar(player);
         }
@@ -1451,11 +1538,6 @@
         function toggleServe() { serve = serve === 1 ? 2 : 1; updateServeUI(); }
 
         function updateServeUI() {
-            const isTeams = nameMode === 'teams';
-            document.getElementById('serve-p1').classList.toggle('d-none', serve !== 1 || isTeams);
-            document.getElementById('serve-p2').classList.toggle('d-none', serve !== 2 || isTeams);
-            document.getElementById('serve-p1-team').classList.toggle('d-none', serve !== 1 || !isTeams);
-            document.getElementById('serve-p2-team').classList.toggle('d-none', serve !== 2 || !isTeams);
             document.getElementById('card-p1').classList.toggle('serving', serve === 1);
             document.getElementById('card-p2').classList.toggle('serving', serve === 2);
         }
@@ -1568,7 +1650,7 @@
         }
 
         function toggleAllConfig() {
-            document.getElementById('all-config').classList.toggle('d-none');
+            document.getElementById('config-modal').classList.toggle('d-none');
         }
 
         function toggleHamburger() {
@@ -1636,20 +1718,20 @@
 
         function getName(p) {
             if (nameMode === 'teams') {
-                return document.getElementById('name-team' + p).value || ('Equipo ' + p);
+                return document.getElementById('cfg-name-team' + p).value || ('Equipo ' + p);
             }
-            const a = document.getElementById('name-p' + p + 'a').value || ('Jugador ' + (p * 2 - 1));
-            const b = document.getElementById('name-p' + p + 'b').value || ('Jugador ' + (p * 2));
+            const a = document.getElementById('cfg-name-p' + p + 'a').value || ('Jugador ' + (p * 2 - 1));
+            const b = document.getElementById('cfg-name-p' + p + 'b').value || ('Jugador ' + (p * 2));
             return a + '/' + b;
         }
 
         function getShortName(p) {
             if (nameMode === 'teams') {
-                const t = document.getElementById('name-team' + p).value || ('Eq' + p);
+                const t = document.getElementById('cfg-name-team' + p).value || ('Eq' + p);
                 return t.length > 10 ? t.substring(0, 10) : t;
             }
-            const a = document.getElementById('name-p' + p + 'a').value || ('J' + (p * 2 - 1));
-            const b = document.getElementById('name-p' + p + 'b').value || ('J' + (p * 2));
+            const a = document.getElementById('cfg-name-p' + p + 'a').value || ('J' + (p * 2 - 1));
+            const b = document.getElementById('cfg-name-p' + p + 'b').value || ('J' + (p * 2));
             const sa = a.length > 5 ? a.substring(0, 5) : a;
             const sb = b.length > 5 ? b.substring(0, 5) : b;
             return sa + '/' + sb;
@@ -1725,7 +1807,13 @@
             }
         }
 
-        function onNameChange() {
+        function syncNamesToCards() {
+            document.getElementById('name-p1a').textContent = document.getElementById('cfg-name-p1a').value || 'Jugador 1';
+            document.getElementById('name-p1b').textContent = document.getElementById('cfg-name-p1b').value || 'Jugador 2';
+            document.getElementById('name-p2a').textContent = document.getElementById('cfg-name-p2a').value || 'Jugador 3';
+            document.getElementById('name-p2b').textContent = document.getElementById('cfg-name-p2b').value || 'Jugador 4';
+            document.getElementById('name-team1').textContent = document.getElementById('cfg-name-team1').value || 'Equipo 1';
+            document.getElementById('name-team2').textContent = document.getElementById('cfg-name-team2').value || 'Equipo 2';
             if (mode === 'padel') renderSetsTable();
             saveToStorage();
         }
@@ -1733,18 +1821,19 @@
         // ── Persistencia ──
         function getCurrentNames() {
             return [
-                document.getElementById('name-p1a').value,
-                document.getElementById('name-p1b').value,
-                document.getElementById('name-p2a').value,
-                document.getElementById('name-p2b').value
+                document.getElementById('cfg-name-p1a').value,
+                document.getElementById('cfg-name-p1b').value,
+                document.getElementById('cfg-name-p2a').value,
+                document.getElementById('cfg-name-p2b').value
             ];
         }
 
         function setNamesUI(names) {
-            document.getElementById('name-p1a').value = names[0] || 'Jugador 1';
-            document.getElementById('name-p1b').value = names[1] || 'Jugador 2';
-            document.getElementById('name-p2a').value = names[2] || 'Jugador 3';
-            document.getElementById('name-p2b').value = names[3] || 'Jugador 4';
+            document.getElementById('cfg-name-p1a').value = names[0] || 'Jugador 1';
+            document.getElementById('cfg-name-p1b').value = names[1] || 'Jugador 2';
+            document.getElementById('cfg-name-p2a').value = names[2] || 'Jugador 3';
+            document.getElementById('cfg-name-p2b').value = names[3] || 'Jugador 4';
+            syncNamesToCards();
         }
 
         function getHistoryHTML() {
@@ -1759,12 +1848,12 @@
             const data = {
                 mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, retasEarlyWin, freeMaxPoints, deuceMode, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage,
-                freePoints,
+                freePoints, playerStats,
                 namesPadel: mode === 'padel' ? getCurrentNames() : (prev.namesPadel || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
                 namesFree: mode === 'free' ? getCurrentNames() : (prev.namesFree || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
                 teamNames: [
-                    document.getElementById('name-team1').value,
-                    document.getElementById('name-team2').value
+                    document.getElementById('cfg-name-team1').value,
+                    document.getElementById('cfg-name-team2').value
                 ],
                 historyPadelHTML: mode === 'padel' ? getHistoryHTML() : (prev.historyPadelHTML || ''),
                 historyFreeHTML: mode === 'free' ? getHistoryHTML() : (prev.historyFreeHTML || '')
@@ -1794,14 +1883,17 @@
                 tiebreak = d.tiebreak || false;
                 advantage = d.advantage || 0;
                 freePoints = d.freePoints || [0, 0];
+                playerStats = d.playerStats || { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
                 nameMode = d.nameMode || 'players';
                 const modeNames = mode === 'padel' ? d.namesPadel : d.namesFree;
                 if (modeNames && modeNames.length === 4) {
                     setNamesUI(modeNames);
                 }
                 if (d.teamNames && d.teamNames.length === 2) {
-                    document.getElementById('name-team1').value = d.teamNames[0] || 'Equipo 1';
-                    document.getElementById('name-team2').value = d.teamNames[1] || 'Equipo 2';
+                    document.getElementById('cfg-name-team1').value = d.teamNames[0] || 'Equipo 1';
+                    document.getElementById('cfg-name-team2').value = d.teamNames[1] || 'Equipo 2';
+                    document.getElementById('name-team1').textContent = d.teamNames[0] || 'Equipo 1';
+                    document.getElementById('name-team2').textContent = d.teamNames[1] || 'Equipo 2';
                 }
                 const histHTML = mode === 'padel' ? d.historyPadelHTML : d.historyFreeHTML;
                 if (histHTML) {
@@ -1862,6 +1954,7 @@
             } else {
                 freePoints = [0, 0]; matchOver = false;
             }
+            playerStats = { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
             history = []; serve = 1;
             updateServeUI();
             document.getElementById('history-list').innerHTML = '';
@@ -1894,13 +1987,14 @@
             hideWinnerCard();
             lastPointTime = 0;
             resetTimer();
-            document.getElementById('name-p1a').value = 'Jugador 1';
-            document.getElementById('name-p1b').value = 'Jugador 2';
-            document.getElementById('name-p2a').value = 'Jugador 3';
-            document.getElementById('name-p2b').value = 'Jugador 4';
-            document.getElementById('name-team1').value = 'Equipo 1';
-            document.getElementById('name-team2').value = 'Equipo 2';
-            onNameChange();
+            document.getElementById('cfg-name-p1a').value = 'Jugador 1';
+            document.getElementById('cfg-name-p1b').value = 'Jugador 2';
+            document.getElementById('cfg-name-p2a').value = 'Jugador 3';
+            document.getElementById('cfg-name-p2b').value = 'Jugador 4';
+            document.getElementById('cfg-name-team1').value = 'Equipo 1';
+            document.getElementById('cfg-name-team2').value = 'Equipo 2';
+            playerStats = { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
+            syncNamesToCards();
             saveToStorage();
             render();
         }
