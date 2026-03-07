@@ -13,7 +13,7 @@ Formato oficial de pádel con sets, juegos y puntos.
 - **Puntos:** 0 → 15 → 30 → 40 → gana juego
 - **Juegos por set:** 6 o 4 (configurable)
 - **Sets para ganar:** 1, 2 o 3 (configurable)
-- **Empate a 40:** Punto de Oro o Ventaja
+- **Empate a 40:** Punto de Oro, 1 Ventaja o 2 Ventajas
 - **Tie-break:** Se activa automáticamente si empatan en juegos (6-6 o 4-4)
 
 ### Padel (Retas)
@@ -42,8 +42,9 @@ Modo libre para cualquier actividad. Cada toque suma 1 punto.
 - **Vibración:** Feedback háptico al anotar punto (en dispositivos compatibles)
 - **Temporizador:** Cuenta el tiempo del partido desde el primer punto hasta que termina
 - **Compartir resultado:** Botón para compartir el resultado final (Web Share API o copiar al portapapeles)
+- **Estadísticas individuales:** Al tocar el nombre de un jugador, se le atribuye el punto. Luego se puede registrar el tipo de golpe (Volea, Bandeja, Globo, Smash, Remate, Otro)
 - **Historial de puntos:** Registro de todos los puntos con hora, separado por modo
-- **Historial de partidos:** Registro de partidos terminados con fecha, resultado y duración
+- **Historial de partidos:** Registro de partidos terminados con fecha, resultado, duración, estadísticas individuales y detalle punto a punto con jugador y tipo de golpe
 - **Tema claro/oscuro:** Toggle desde el menú para uso al aire libre
 - **Deshacer:** Permite revertir el último punto anotado
 - **Reiniciar:** Resetea solo los marcadores, mantiene nombres
@@ -77,7 +78,7 @@ Accesible desde el menú hamburguesa > Configuración:
 | Juegos | 4, 6, 8 | Juegos fijos (solo Retas) |
 | Fin | Todos / Anticipado | Jugar todos los juegos o terminar con mayoría (solo Retas) |
 | Puntos | 5, 10, 15, 20, 25, 30 | Puntos para ganar (solo Libre) |
-| 40-40 | Oro / Ventaja | Qué pasa en empate a 40 |
+| 40-40 | Oro / 1 Ventaja / 2 Ventajas | Qué pasa en empate a 40 |
 
 ## Instalar en el celular
 
@@ -102,7 +103,7 @@ Una vez instalada, se abre sin barra de navegador y funciona sin conexión a int
 ## Tecnología
 
 - HTML, CSS, JavaScript (vanilla, sin frameworks)
-- Bootstrap 5 (solo CSS)
+- Bootstrap 5 (solo CSS) + Bootstrap Icons
 - Web Audio API para sonidos
 - Service Worker para uso offline
 - LocalStorage para persistencia
