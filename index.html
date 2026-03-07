@@ -255,8 +255,6 @@
 
         .cfg-card .btn-group-sm .btn {
             height: 38px;
-            padding-left: 4px;
-            padding-right: 4px;
         }
         .config-row-wrap > span {
             display: contents;
@@ -292,6 +290,13 @@
             background: #fff;
             color: #1a1a1a;
             border-color: #aaa;
+        }
+
+        @media (max-width: 767px) {
+            .cfg-card-tight {
+                padding-left: 4px;
+                padding-right: 4px;
+            }
         }
 
         @media (min-width: 768px) {
@@ -752,7 +757,7 @@
                         </div>
                     </div>
                 </span>
-                <div class="cfg-card">
+                <div class="cfg-card cfg-card-tight">
                     <small style="color:#FFD54F; font-weight:600; display:block; margin-bottom:4px;">40-40</small>
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-outline-light py-1 px-2 active" onclick="setDeuceMode('golden')" id="deuce-golden">Oro</button>
