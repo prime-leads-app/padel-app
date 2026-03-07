@@ -678,7 +678,7 @@
                 <h5 style="margin:0; font-weight:700;">Configuración</h5>
                 <button class="btn btn-sm" onclick="toggleAllConfig()" style="padding:0 8px; background:#e94560; color:#fff; font-weight:700; border-radius:4px;">✕</button>
             </div>
-            <div style="display:flex; justify-content:center; gap:10px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
                 <div class="btn-group" role="group">
                     <button class="btn btn-outline-light mode-btn active" onclick="setMode('padel')" id="btn-padel">Padel</button>
                     <button class="btn btn-outline-light mode-btn" onclick="setMode('free')" id="btn-free">Libre</button>
@@ -686,6 +686,10 @@
                 <div class="btn-group" role="group">
                     <button class="btn btn-outline-light name-btn active" onclick="setNameMode('players')" id="btn-players">Jugadores</button>
                     <button class="btn btn-outline-light name-btn" onclick="setNameMode('teams')" id="btn-teams">Equipos</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-light mode-btn active" onclick="setTrackShots(true)" id="btn-shots-on">Golpes</button>
+                    <button class="btn btn-outline-light mode-btn" onclick="setTrackShots(false)" id="btn-shots-off">Sin golpes</button>
                 </div>
             </div>
             <div id="libre-config" class="d-none">
@@ -844,6 +848,12 @@
                 <span style="opacity:0.7;">Ej: Van 40-40, anotas = ventaja. Si anotas de nuevo = ganas. Si el otro anota = iguales, y ahora el siguiente punto gana directo.</span><br>
                 <b>2 Ventajas:</b> Ventaja clasica sin limite. Tienes que anotar 2 puntos seguidos para ganar. Si regresan a iguales, se repite sin limite.<br>
                 <span style="opacity:0.7;">Ej: Van 40-40, anotas = ventaja. Si anotas = ganas. Si el otro anota = iguales. Pueden ir y venir muchas veces.</span>
+            </div>
+
+            <div style="margin:8px 0;">
+                <b style="color:#FFD54F;">Golpes / Sin golpes</b><br>
+                <b>Golpes:</b> Al tocar el nombre de un jugador, se le atribuye el punto y aparece un modal para registrar el tipo de golpe (Volea, Bandeja, Globo, Smash, Remate, Otro).<br>
+                <b>Sin golpes:</b> Al tocar el nombre solo se atribuye el punto al jugador, sin pedir tipo de golpe. Mas rapido si no necesitas ese nivel de detalle.
             </div>
 
         </div>
@@ -1022,7 +1032,7 @@
             </a>
             <a href="https://github.com/prime-leads-app/padel-app" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
                 <div class="card-body py-0 px-2 text-center">
-                    <small class="text-white">PadelApp V3.2</small>
+                    <small class="text-white">PadelApp V3.3</small>
                 </div>
             </a>
             <div class="card bg-dark border-secondary flex-fill">
@@ -1145,6 +1155,7 @@
         let retasEarlyWin = false; // true = termina al tener mayoría, false = jugar todos
         let freeMaxPoints = 30;
         let deuceMode = 'golden'; // 'golden' = punto de oro, '1adv' = 1 ventaja, '2adv' = 2 ventajas
+        let trackShots = true; // true = mostrar modal de tipo de golpe, false = solo atribuir punto
         const SHOT_TYPES = ['smash', 'bandeja', 'globo', 'remate', 'volea', 'otro'];
         function emptyPlayerStats() {
             const s = {};
@@ -1298,6 +1309,13 @@
                 document.getElementById('deuce-2adv').classList.toggle('active', m === '2adv');
                 resetMatch();
             });
+        }
+
+        function setTrackShots(v) {
+            trackShots = v;
+            document.getElementById('btn-shots-on').classList.toggle('active', v);
+            document.getElementById('btn-shots-off').classList.toggle('active', !v);
+            saveToStorage();
         }
 
         function setFreeMaxPoints(n) {
@@ -1501,7 +1519,7 @@
             if (playerId && nameMode === 'players') {
                 playerStats[playerId].points++;
                 _lastScoringPlayerId = playerId;
-                showShotTypeModal(playerId);
+                if (trackShots) showShotTypeModal(playerId);
             } else {
                 _lastScoringPlayerId = null;
             }
@@ -2137,7 +2155,7 @@
         function saveToStorage() {
             const prev = JSON.parse(localStorage.getItem('padel-state') || '{}');
             const data = {
-                mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, retasEarlyWin, freeMaxPoints, deuceMode, serve, matchOver,
+                mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, retasEarlyWin, freeMaxPoints, deuceMode, trackShots, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage, deuceCount,
                 freePoints, playerStats, matchLog,
                 namesPadel: mode === 'padel' ? getCurrentNames() : (prev.namesPadel || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
@@ -2165,6 +2183,7 @@
                 retasEarlyWin = d.retasEarlyWin || false;
                 freeMaxPoints = d.freeMaxPoints || 30;
                 deuceMode = d.deuceMode === 'advantage' ? '2adv' : (d.deuceMode || 'golden');
+                trackShots = d.trackShots !== undefined ? d.trackShots : true;
                 serve = d.serve || 1;
                 matchOver = d.matchOver || false;
                 points = d.points || [0, 0];
@@ -2223,6 +2242,8 @@
                 document.getElementById('deuce-golden').classList.toggle('active', deuceMode === 'golden');
                 document.getElementById('deuce-1adv').classList.toggle('active', deuceMode === '1adv');
                 document.getElementById('deuce-2adv').classList.toggle('active', deuceMode === '2adv');
+                document.getElementById('btn-shots-on').classList.toggle('active', trackShots);
+                document.getElementById('btn-shots-off').classList.toggle('active', !trackShots);
             } catch(e) {}
         }
 
