@@ -1,10 +1,11 @@
-const CACHE_NAME = 'padel-v2.9';
+const CACHE_NAME = 'padel-v3.1';
 const ASSETS = [
     './',
     './index.html',
     './manifest.json',
     './icon.svg',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
+    'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
 ];
 

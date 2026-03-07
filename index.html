@@ -12,6 +12,7 @@
     <link rel="apple-touch-icon" href="icon.svg">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -160,6 +161,8 @@
             display: flex;
             align-items: center;
             margin-bottom: 2px;
+            position: relative;
+            z-index: 2;
         }
 
         .card-body-row {
@@ -204,6 +207,20 @@
             color: #fff;
             text-align: center;
             padding: 20px 4px;
+        }
+
+        #shot-type-overlay {
+            align-items: flex-start;
+            padding: 0;
+        }
+        #shot-type-overlay > .winner-card {
+            max-width: 100% !important;
+            width: 100%;
+            min-height: 100dvh;
+            border-radius: 0 !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         #config-modal {
@@ -276,6 +293,16 @@
         }
 
         @media (min-width: 768px) {
+            #shot-type-overlay {
+                align-items: center;
+                padding: 20px;
+            }
+            #shot-type-overlay > .winner-card {
+                max-width: 400px !important;
+                min-height: 80vh;
+                border-radius: 24px !important;
+                width: 94%;
+            }
             #config-modal {
                 align-items: center;
                 padding: 20px;
@@ -991,7 +1018,7 @@
             </a>
             <a href="https://github.com/prime-leads-app/padel-app" target="_blank" rel="noopener" class="card bg-dark border-secondary text-decoration-none flex-fill" style="cursor:pointer;">
                 <div class="card-body py-0 px-2 text-center">
-                    <small class="text-white">PadelApp V2.9</small>
+                    <small class="text-white">PadelApp V3.1</small>
                 </div>
             </a>
             <div class="card bg-dark border-secondary flex-fill">
@@ -1082,6 +1109,27 @@
     </div>
 
 
+    <!-- Shot Type Modal -->
+    <div class="winner-overlay d-none" id="shot-type-overlay" onclick="closeShotTypeModal()">
+        <div class="winner-card" style="background: linear-gradient(135deg, #1b5e20, #2c3e50); padding:24px 16px;" onclick="event.stopPropagation()">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h5 style="margin:0; font-weight:700;" id="shot-type-title">Tipo de golpe</h5>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="opacity:0.6; font-size:0.8rem;" id="shot-type-timer">5s</span>
+                    <button onclick="closeShotTypeModal()" style="padding:2px 8px; background:#e94560; color:#fff; font-weight:700; border:none; border-radius:4px; font-size:0.9rem; cursor:pointer;">✕</button>
+                </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1;">
+                <button onclick="registerShot('volea')" style="display:flex; align-items:center; justify-content:center; gap:10px; flex:1; border:none; border-radius:10px; background:#00838f; color:#fff; font-weight:700; font-size:1.3rem; cursor:pointer;"><i class="bi bi-shield"></i> Volea</button>
+                <button onclick="registerShot('bandeja')" style="display:flex; align-items:center; justify-content:center; gap:10px; flex:1; border:none; border-radius:10px; background:#e65100; color:#fff; font-weight:700; font-size:1.3rem; cursor:pointer;"><i class="bi bi-hand-index"></i> Bandeja</button>
+                <button onclick="registerShot('globo')" style="display:flex; align-items:center; justify-content:center; gap:10px; flex:1; border:none; border-radius:10px; background:#1565c0; color:#fff; font-weight:700; font-size:1.3rem; cursor:pointer;"><i class="bi bi-arrow-up-circle"></i> Globo</button>
+                <button onclick="registerShot('smash')" style="display:flex; align-items:center; justify-content:center; gap:10px; flex:1; border:none; border-radius:10px; background:#c62828; color:#fff; font-weight:700; font-size:1.3rem; cursor:pointer;"><i class="bi bi-arrow-down-circle"></i> Smash</button>
+                <button onclick="registerShot('remate')" style="display:flex; align-items:center; justify-content:center; gap:10px; flex:1; border:none; border-radius:10px; background:#6a1b9a; color:#fff; font-weight:700; font-size:1.3rem; cursor:pointer;"><i class="bi bi-lightning-charge"></i> Remate</button>
+                <button onclick="registerShot('otro')" style="display:flex; align-items:center; justify-content:center; gap:10px; flex:1; border:none; border-radius:10px; background:#455a64; color:#fff; font-weight:700; font-size:1.3rem; cursor:pointer;"><i class="bi bi-three-dots"></i> Otro</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const PADEL_POINTS = ['0', '15', '30', '40'];
         let mode = 'padel';
@@ -1093,7 +1141,18 @@
         let retasEarlyWin = false; // true = termina al tener mayoría, false = jugar todos
         let freeMaxPoints = 30;
         let deuceMode = 'golden'; // 'golden' = punto de oro, 'advantage' = ventaja tradicional
-        let playerStats = { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
+        const SHOT_TYPES = ['smash', 'bandeja', 'globo', 'remate', 'volea', 'otro'];
+        function emptyPlayerStats() {
+            const s = {};
+            ['p1a','p1b','p2a','p2b'].forEach(k => {
+                s[k] = { points: 0, shots: {} };
+                SHOT_TYPES.forEach(t => s[k].shots[t] = 0);
+            });
+            return s;
+        }
+        let playerStats = emptyPlayerStats();
+        let matchLog = [];
+        let _lastScoringPlayerId = null;
         let serve = 1;
         let history = [];
         let matchOver = false;
@@ -1326,9 +1385,18 @@
         }
 
         // ── Sonidos ──
+        let _audioCtx = null;
+        function getAudioCtx() {
+            if (!_audioCtx || _audioCtx.state === 'closed') {
+                _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (_audioCtx.state === 'suspended') _audioCtx.resume();
+            return _audioCtx;
+        }
+
         function playSound(type, player) {
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const ctx = getAudioCtx();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.connect(gain);
@@ -1418,14 +1486,86 @@
 
         function cardTap(e, player) {
             const now = Date.now();
-            if (now - lastPointTime < POINT_COOLDOWN) return;
+            const cdBlocked = now - lastPointTime < POINT_COOLDOWN;
+            if (cdBlocked) return;
             lastPointTime = now;
             const playerId = e.target.dataset && e.target.dataset.player;
             if (playerId && nameMode === 'players') {
-                playerStats[playerId]++;
+                playerStats[playerId].points++;
+                _lastScoringPlayerId = playerId;
+                showShotTypeModal(playerId);
+            } else {
+                _lastScoringPlayerId = null;
             }
             addPoint(player);
             startCooldownBar(player);
+        }
+
+        let pendingShotPlayer = null;
+        let shotTypeTimer = null;
+        let shotTypeCountdown = 5;
+
+        function showShotTypeModal(playerId) {
+            pendingShotPlayer = playerId;
+            shotTypeCountdown = 10;
+            const nameEl = document.getElementById('name-' + playerId);
+            const playerName = nameEl ? nameEl.textContent : playerId;
+            document.getElementById('shot-type-title').textContent = playerName + ' - Tipo de golpe';
+            document.getElementById('shot-type-timer').textContent = '10s';
+            document.getElementById('shot-type-overlay').classList.remove('d-none');
+            if (shotTypeTimer) clearInterval(shotTypeTimer);
+            shotTypeTimer = setInterval(() => {
+                shotTypeCountdown--;
+                document.getElementById('shot-type-timer').textContent = shotTypeCountdown + 's';
+                if (shotTypeCountdown <= 0) {
+                    registerShot('otro');
+                }
+            }, 1000);
+        }
+
+        function registerShot(type) {
+            if (pendingShotPlayer) {
+                playerStats[pendingShotPlayer].shots[type]++;
+                // Update last matchLog entry with shot type
+                for (let i = matchLog.length - 1; i >= 0; i--) {
+                    if (matchLog[i].player && matchLog[i].shot === null) {
+                        matchLog[i].shot = type;
+                        break;
+                    }
+                }
+                pendingShotPlayer = null;
+            }
+            closeShotTypeModal();
+            saveToStorage();
+            // If match already ended, update saved match with shot info
+            if (matchOver) {
+                const matches = JSON.parse(localStorage.getItem('padel-matches') || '[]');
+                if (matches.length > 0) {
+                    matches[0].history = matchLog.slice();
+                    const pNames = {
+                        p1a: document.getElementById('cfg-name-p1a').value || 'Jugador 1',
+                        p1b: document.getElementById('cfg-name-p1b').value || 'Jugador 2',
+                        p2a: document.getElementById('cfg-name-p2a').value || 'Jugador 3',
+                        p2b: document.getElementById('cfg-name-p2b').value || 'Jugador 4'
+                    };
+                    matches[0].playerStats = {};
+                    ['p1a','p1b','p2a','p2b'].forEach(k => {
+                        if (playerStats[k].points > 0) {
+                            matches[0].playerStats[pNames[k]] = {
+                                points: playerStats[k].points,
+                                shots: { ...playerStats[k].shots }
+                            };
+                        }
+                    });
+                    localStorage.setItem('padel-matches', JSON.stringify(matches));
+                }
+            }
+        }
+
+        function closeShotTypeModal() {
+            if (shotTypeTimer) { clearInterval(shotTypeTimer); shotTypeTimer = null; }
+            pendingShotPlayer = null;
+            document.getElementById('shot-type-overlay').classList.add('d-none');
         }
 
         function addPoint(player) {
@@ -1585,6 +1725,7 @@
             hideWinnerCard();
             const list = document.getElementById('history-list');
             if (list.firstChild) list.removeChild(list.firstChild);
+            if (matchLog.length) matchLog.pop();
             lastPointTime = 0;
             updateServeUI(); render();
         }
@@ -1706,6 +1847,14 @@
             const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
             div.textContent = `${t} - ${text}`;
             list.insertBefore(div, list.firstChild);
+            // Structured log for match history
+            let playerName = null;
+            if (_lastScoringPlayerId) {
+                const el = document.getElementById('name-' + _lastScoringPlayerId);
+                playerName = el ? el.textContent : _lastScoringPlayerId;
+                _lastScoringPlayerId = null; // consume - only first addHistory gets the player
+            }
+            matchLog.push({ time: t, text, player: playerName, shot: null });
         }
 
         function toggleAllConfig() {
@@ -1753,6 +1902,40 @@
                     const winnerName = m.winner === 1 ? m.team1 : m.team2;
                     let scoreLine = m.score;
                     if (m.detail) scoreLine += ` (${m.detail})`;
+                    let statsHTML = '';
+                    if (m.playerStats && Object.keys(m.playerStats).length > 0) {
+                        statsHTML = '<div style="margin-top:4px; padding-top:4px; border-top:1px solid rgba(255,255,255,0.1); font-size:0.7rem; color:#ccc;">';
+                        statsHTML += '<div style="font-weight:600; color:#aaa; margin-bottom:2px;">Estadísticas individuales:</div>';
+                        Object.entries(m.playerStats).forEach(([name, st]) => {
+                            const shotParts = Object.entries(st.shots).filter(([,v]) => v > 0).map(([k,v]) => {
+                                const labels = {smash:'Smash',bandeja:'Bandeja',globo:'Globo',remate:'Remate',volea:'Volea',otro:'Otro'};
+                                return `${v} ${labels[k] || k}`;
+                            });
+                            const shotText = shotParts.length > 0 ? ` — ${shotParts.join(', ')}` : '';
+                            statsHTML += `<div style="margin-left:6px;">⚡ ${name}: ${st.points} pts${shotText}</div>`;
+                        });
+                        statsHTML += '</div>';
+                    }
+                    let historyHTML = '';
+                    if (m.history && m.history.length > 0) {
+                        const uid = 'mh-' + Math.random().toString(36).substr(2,6);
+                        const shotLabels = {smash:'Smash',bandeja:'Bandeja',globo:'Globo',remate:'Remate',volea:'Volea',otro:'Otro'};
+                        const renderEntry = (h) => {
+                            if (typeof h === 'string') return h; // Legacy text entries
+                            let line = `${h.time} - ${h.text}`;
+                            if (h.player) {
+                                line += ` · <span style="color:#7ec8e3;">${h.player}</span>`;
+                                if (h.shot) line += ` <span style="color:#ffc107;">[${shotLabels[h.shot] || h.shot}]</span>`;
+                            }
+                            return line;
+                        };
+                        historyHTML = `<div style="margin-top:4px; padding-top:4px; border-top:1px solid rgba(255,255,255,0.1);">
+                            <div onclick="document.getElementById('${uid}').classList.toggle('d-none')" style="font-size:0.7rem; color:#7ec8e3; cursor:pointer; font-weight:600;">▶ Ver detalle punto a punto (${m.history.length})</div>
+                            <div id="${uid}" class="d-none" style="font-size:0.65rem; color:#999; margin-top:4px; max-height:200px; overflow-y:auto;">
+                                ${m.history.slice().reverse().map(h => `<div style="padding:2px 0; border-bottom:1px solid rgba(255,255,255,0.05);">${renderEntry(h)}</div>`).join('')}
+                            </div>
+                        </div>`;
+                    }
                     return `<div style="background:#2c2c54; border-radius:8px; padding:8px 10px; margin-bottom:6px; font-size:0.8rem;">
                         <div style="display:flex; justify-content:space-between; color:#aaa; font-size:0.7rem;">
                             <span>${m.date}</span>
@@ -1760,6 +1943,8 @@
                         </div>
                         <div style="margin-top:4px; font-weight:600;">${m.team1} vs ${m.team2}</div>
                         <div style="color:#ffc107; font-weight:700;">${winnerName} gana · ${scoreLine}</div>
+                        ${statsHTML}
+                        ${historyHTML}
                     </div>`;
                 }).join('');
             }
@@ -1833,6 +2018,24 @@
             } else {
                 match.score = `${freePoints[0]} - ${freePoints[1]}`;
             }
+            // Guardar stats individuales por jugador
+            const pNames = {
+                p1a: document.getElementById('cfg-name-p1a').value || 'Jugador 1',
+                p1b: document.getElementById('cfg-name-p1b').value || 'Jugador 2',
+                p2a: document.getElementById('cfg-name-p2a').value || 'Jugador 3',
+                p2b: document.getElementById('cfg-name-p2b').value || 'Jugador 4'
+            };
+            match.playerStats = {};
+            ['p1a','p1b','p2a','p2b'].forEach(k => {
+                if (playerStats[k].points > 0) {
+                    match.playerStats[pNames[k]] = {
+                        points: playerStats[k].points,
+                        shots: { ...playerStats[k].shots }
+                    };
+                }
+            });
+            // Guardar historial estructurado de puntos
+            match.history = matchLog.slice();
             const matches = JSON.parse(localStorage.getItem('padel-matches') || '[]');
             matches.unshift(match);
             if (matches.length > 50) matches.length = 50;
@@ -1907,7 +2110,7 @@
             const data = {
                 mode, nameMode, padelFormat, setsToWin, gamesPerSet, retasGames, retasEarlyWin, freeMaxPoints, deuceMode, serve, matchOver,
                 points, games, sets, setsWon, tiebreak, advantage,
-                freePoints, playerStats,
+                freePoints, playerStats, matchLog,
                 namesPadel: mode === 'padel' ? getCurrentNames() : (prev.namesPadel || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
                 namesFree: mode === 'free' ? getCurrentNames() : (prev.namesFree || ['Jugador 1','Jugador 2','Jugador 3','Jugador 4']),
                 teamNames: [
@@ -1942,7 +2145,12 @@
                 tiebreak = d.tiebreak || false;
                 advantage = d.advantage || 0;
                 freePoints = d.freePoints || [0, 0];
-                playerStats = d.playerStats || { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
+                if (d.playerStats && d.playerStats.p1a !== undefined && typeof d.playerStats.p1a === 'object') {
+                    playerStats = d.playerStats;
+                } else {
+                    playerStats = emptyPlayerStats();
+                }
+                matchLog = d.matchLog || [];
                 nameMode = d.nameMode || 'players';
                 const modeNames = mode === 'padel' ? d.namesPadel : d.namesFree;
                 if (modeNames && modeNames.length === 4) {
@@ -1975,7 +2183,6 @@
                 document.getElementById('fmt-retas').classList.toggle('active', padelFormat === 'retas');
                 document.getElementById('config-normal').style.display = padelFormat === 'normal' ? 'contents' : 'none';
                 document.getElementById('config-retas').style.display = padelFormat === 'retas' ? 'contents' : 'none';
-                document.getElementById('config-retas-fin').style.display = padelFormat === 'retas' ? 'block' : 'none';
                 document.getElementById('gps-6').classList.toggle('active', gamesPerSet === 6);
                 document.getElementById('gps-4').classList.toggle('active', gamesPerSet === 4);
                 document.getElementById('rg-4').classList.toggle('active', retasGames === 4);
@@ -1998,7 +2205,6 @@
         }
 
         function confirmReset() {
-            if (!hasScore()) { resetMatch(); return; }
             document.getElementById('confirm-overlay').classList.remove('d-none');
         }
 
@@ -2014,7 +2220,8 @@
             } else {
                 freePoints = [0, 0]; matchOver = false;
             }
-            playerStats = { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
+            playerStats = emptyPlayerStats();
+            matchLog = [];
             history = []; serve = 1;
             updateServeUI();
             document.getElementById('history-list').innerHTML = '';
@@ -2053,7 +2260,8 @@
             document.getElementById('cfg-name-p2b').value = 'Jugador 4';
             document.getElementById('cfg-name-team1').value = 'Equipo 1';
             document.getElementById('cfg-name-team2').value = 'Equipo 2';
-            playerStats = { p1a: 0, p1b: 0, p2a: 0, p2b: 0 };
+            playerStats = emptyPlayerStats();
+            matchLog = [];
             syncNamesToCards();
             saveToStorage();
             render();
