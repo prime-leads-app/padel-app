@@ -2,7 +2,7 @@
 
 Marcador digital para partidos de pádel y retas. Funciona como PWA (Progressive Web App), se puede instalar en el celular y usar sin conexión.
 
-**Demo en vivo:** [https://prime-leads-app.github.io/padel-app/](https://prime-leads-app.github.io/padel-app/)
+**Demo en vivo:** [https://prime-leads-app.github.io/padel-score-board/](https://prime-leads-app.github.io/padel-score-board/)
 
 ## Modos de juego
 
